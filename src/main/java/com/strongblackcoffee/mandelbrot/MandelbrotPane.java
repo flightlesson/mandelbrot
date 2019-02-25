@@ -25,7 +25,7 @@ import org.apache.logging.log4j.Logger;
 class MandelbrotPane extends JPanel implements ComponentListener, MouseListener, MouseMotionListener {
     static final Logger LOGGER = LogManager.getLogger();
     
-    MandelbrotPane() {
+    MandelbrotPane(ColorMap colorMap) {
         // setBounds(100,100,800,600);
         LOGGER.info("MandelbrotPane constructor");
         this.addComponentListener(this);
@@ -33,7 +33,7 @@ class MandelbrotPane extends JPanel implements ComponentListener, MouseListener,
         this.addMouseMotionListener(this);
         
         this.setBounds(0,0,800,600);
-        mandelbrotSet = new MandelbrotSet();
+        mandelbrotSet = new MandelbrotSet(colorMap);
         //img = image.updateImg(this.getWidth(), this.getHeight()); 
         this.setVisible(true);
         resetClipping();

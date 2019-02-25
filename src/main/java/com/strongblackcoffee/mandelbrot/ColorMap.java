@@ -8,28 +8,29 @@ import java.awt.Color;
 public class ColorMap {
     
     public static void main(String[] args) {
-        ColorMap colorMap = new ColorMap(1000);
+        ColorMap colorMap = new ColorMap();
         
     }
 
-    ColorMap(int n) {
-        colorMap = new int[n];
-        colorMap[0] = 0xFFFFFF;
-        colorMap[1] = 0xAAFF99; // light green
-        colorMap[2] = 0x00FF00; // green
-        colorMap[3] = 0x00B31E; // darker green
-        colorMap[4] = 0x99CCFF; // lighter blue
-        colorMap[5] = 0x3377FF; // light blue
-        colorMap[6] = 0x0000FF; // blue
-        colorMap[7] = 0x0000AA; // dark blue
-        colorMap[8] = 0x665500; // golden
-        colorMap[9] = 0xCCCC00; 
-        colorMap[10] = 0xFFFF00; // yellow
-        colorMap[11] = 0xFFFF99; // pastel yellow
-        colorMap[12] = 0xFFF7CC;
-        
+    ColorMap() {
     }
     
-    private int[] colorMap;
     
+    
+    int getColor(int n) {
+        if (n == 100) return 0;
+        if (n > 64) return Color.PINK.getRGB();
+        if (n > 42) return Color.BLUE.getRGB();
+        if (n > 24) return Color.GREEN.getRGB();
+        if (n > 16)  return Color.RED.darker().getRGB();
+        if (n > 10)  return Color.RED.getRGB();
+        if (n > 8)  return Color.RED.brighter().getRGB();
+        if (n > 6)  return Color.ORANGE.darker().getRGB();
+        if (n > 5)   return Color.ORANGE.getRGB();
+        if (n > 4)   return Color.YELLOW.getRGB();
+        if (n > 3)   return 0xCCCCCC;
+        if (n > 2)  return 0xDDDDDD;
+        if (n > 1)  return 0xEEEEEE;
+        return 0xFFFFFF;
+    }
 }

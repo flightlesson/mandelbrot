@@ -106,7 +106,11 @@ public class MandelbrotSet {
         return maxIterations;
     }
     
-    MandelbrotSet() {
+    private int[] stats;
+    private ColorMap colorMap;
+    
+    MandelbrotSet(ColorMap colorMap) {
+        this.colorMap = colorMap;
     }
     
     /**
@@ -122,6 +126,11 @@ public class MandelbrotSet {
             LOGGER.fatal("widthInPixels="+widthInPixels+" and heightInPixels="+heightInPixels+" must both be greater than 2!");
             System.exit(1);
         }
+        
+        int[][] pixels = new int[widthInPixels][heightInPixels];
+        
+        stats = new int[maxIterations+1];
+        
         double widthIncrement = (lowerRightCorner.getReal() - upperLeftCorner.getReal()) / (widthInPixels - 1);
         double heightIncrement = (upperLeftCorner.getImaginary() - lowerRightCorner.getImaginary()) / (heightInPixels - 1);
         
@@ -139,30 +148,22 @@ public class MandelbrotSet {
             double y = lowerRightCorner.getImaginary();
             for (int iy=0; iy < heightInPixels; ++iy) {
                 int n = isInMandelbrotSet(maxIterations, new Complex(x,y));
-                int color = getColor(n); // (n == maxIterations ? 0 : 0xFFFFFF);
-                //LOGGER.trace("["+ix+","+iy+" ("+x+","+y+") => n="+n+", color="+color );
-                img.setRGB(ix,iy,color);
+                ++stats[n];
+                //int color = getColor(n); // (n == maxIterations ? 0 : 0xFFFFFF);
+                //img.setRGB(ix,iy,color);
+                pixels[ix][iy] = n;
                 y += heightIncrement;
             }
             x += widthIncrement;
         }
+        
+        for (int ix=0; ix < widthInPixels; ++ix) {
+            for (int iy=0; iy < heightInPixels; ++iy) {
+                int color = colorMap.getColor(pixels[ix][iy]);
+                img.setRGB(ix,iy,color);
+            }
+        }
+        
         return img;
-    }
-    
-    int getColor(int n) {
-        if (n == 100) return 0;
-        if (n > 64) return Color.PINK.getRGB();
-        if (n > 42) return Color.BLUE.getRGB();
-        if (n > 24) return Color.GREEN.getRGB();
-        if (n > 16)  return Color.RED.darker().getRGB();
-        if (n > 10)  return Color.RED.getRGB();
-        if (n > 8)  return Color.RED.brighter().getRGB();
-        if (n > 6)  return Color.ORANGE.darker().getRGB();
-        if (n > 5)   return Color.ORANGE.getRGB();
-        if (n > 4)   return Color.YELLOW.getRGB();
-        if (n > 3)   return 0xCCCCCC;
-        if (n > 2)  return 0xDDDDDD;
-        if (n > 1)  return 0xEEEEEE;
-        return 0xFFFFFF;
     }
 }
