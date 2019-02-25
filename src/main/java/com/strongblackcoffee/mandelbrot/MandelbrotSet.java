@@ -154,40 +154,15 @@ public class MandelbrotSet {
         if (n > 64) return Color.PINK.getRGB();
         if (n > 42) return Color.BLUE.getRGB();
         if (n > 24) return Color.GREEN.getRGB();
-        if (n > 16)  return Color.RED.getRGB();
-        if (n > 10)  return Color.RED.brighter().getRGB();
+        if (n > 16)  return Color.RED.darker().getRGB();
+        if (n > 10)  return Color.RED.getRGB();
+        if (n > 8)  return Color.RED.brighter().getRGB();
         if (n > 6)  return Color.ORANGE.darker().getRGB();
-        if (n > 4)   return Color.ORANGE.getRGB();
-        if (n > 2)   return Color.YELLOW.getRGB();
-        if (n > 1)   return Color.YELLOW.brighter().getRGB();
+        if (n > 5)   return Color.ORANGE.getRGB();
+        if (n > 4)   return Color.YELLOW.getRGB();
+        if (n > 3)   return 0xCCCCCC;
+        if (n > 2)  return 0xDDDDDD;
+        if (n > 1)  return 0xEEEEEE;
         return 0xFFFFFF;
-    }
-    
-    static BufferedImage updateImg(int width, int height) {
-        //super("Mandelbrot Set");
-        //setBounds(100, 100, 800, 600);
-        //setResizable(false);
-        //setDefaultCloseOperation(EXIT_ON_CLOSE);
-        int MAX_ITER = 570;
-        double ZOOM = 150;
-        double zx, zy, cX, cY, tmp;
-        
-        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                zx = zy = 0;
-                cX = (x - 400) / ZOOM;
-                cY = (y - 300) / ZOOM;
-                int iter = MAX_ITER;
-                while (zx * zx + zy * zy < 4 && iter > 0) {
-                    tmp = zx * zx - zy * zy + cX;
-                    zy = 2.0 * zx * zy + cY;
-                    zx = tmp;
-                    iter--;
-                }
-                img.setRGB(x, y, iter | (iter << 8));
-            }
-        }
-        return img;
     }
 }
