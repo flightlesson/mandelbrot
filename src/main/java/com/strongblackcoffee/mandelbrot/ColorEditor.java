@@ -5,17 +5,7 @@ import java.awt.Color;
 /**
  *
  */
-public class ColorMap {
-    
-    public static void main(String[] args) {
-        ColorMap colorMap = new ColorMap();
-        
-    }
-
-    ColorMap() {
-    }
-    
-    
+public class ColorEditor {
     
     int getColor(int n) {
         if (n == 100) return 0;
@@ -33,4 +23,7 @@ public class ColorMap {
         if (n > 1)  return 0xEEEEEE;
         return 0xFFFFFF;
     }
+    
+    
+    
 }

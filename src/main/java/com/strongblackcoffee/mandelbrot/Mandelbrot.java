@@ -76,14 +76,14 @@ public class Mandelbrot extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setJMenuBar(constructMenuBar());
         this.setMinimumSize(new Dimension(200,200));
-        colorMap = new ColorMap();
-        mandelbrotPane = new MandelbrotPane(colorMap);
+        colorMap = new ColorEditor();
+        mandelbrotPane = new MandelbrotPane((ColorProvider)colorMap);
         this.setContentPane(mandelbrotPane);
         pack();
         setVisible(true);
     }
     
-    private ColorMap colorMap;
+    private ColorEditor colorMap;
     private MandelbrotPane mandelbrotPane;
 
     final JMenuBar constructMenuBar() {

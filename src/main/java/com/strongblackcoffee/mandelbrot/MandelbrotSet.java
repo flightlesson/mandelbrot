@@ -107,9 +107,9 @@ public class MandelbrotSet {
     }
     
     private int[] stats;
-    private ColorMap colorMap;
+    private ColorProvider colorMap;
     
-    MandelbrotSet(ColorMap colorMap) {
+    MandelbrotSet(ColorProvider colorMap) {
         this.colorMap = colorMap;
     }
     
