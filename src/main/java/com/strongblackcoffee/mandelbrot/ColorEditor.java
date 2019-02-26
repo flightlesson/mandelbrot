@@ -5,10 +5,11 @@ import java.awt.Color;
 /**
  *
  */
-public class ColorEditor {
+public class ColorEditor implements ColorProvider {
     
-    int getColor(int n) {
-        if (n == 100) return 0;
+    @Override
+    public int getColor(int n) {
+        if (n == 0) return 0;
         if (n > 64) return Color.PINK.getRGB();
         if (n > 42) return Color.BLUE.getRGB();
         if (n > 24) return Color.GREEN.getRGB();
