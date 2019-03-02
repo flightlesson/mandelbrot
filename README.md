@@ -1,7 +1,4 @@
 # Mandelbrot viewer
 
-TODO:
+<img src="design-notes.png"/>
 
-- add axis lines
-- statistics
-- better colors
