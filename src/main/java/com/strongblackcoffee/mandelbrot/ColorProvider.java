@@ -7,5 +7,11 @@ import java.awt.Color;
  */
 public interface ColorProvider {
     
-    int getColor(int n);
+    /**
+     * 
+     * @param n   -1 &lt;= n &lt; maxColors 
+     * @param maxColors 
+     * @return 
+     */
+    int getColor(int n, int maxColors);
 }

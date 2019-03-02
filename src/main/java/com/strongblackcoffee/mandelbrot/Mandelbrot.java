@@ -34,7 +34,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * 
+ * The application frame and menus.
  */
 public class Mandelbrot extends JFrame {
     static final Logger LOGGER = LogManager.getLogger();
@@ -75,16 +75,16 @@ public class Mandelbrot extends JFrame {
         super("Mandelbrot");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setJMenuBar(constructMenuBar());
-        this.setMinimumSize(new Dimension(200,200));
-        colorMap = new ColorEditor();
-        mandelbrotPane = new MandelbrotPane((ColorProvider)colorMap);
+        this.setMinimumSize(new Dimension(600,600));
+        colorEditor = new ColorEditor(this);
+        mandelbrotPane = new MandelbrotPane((ColorProvider)colorEditor);
         this.setContentPane(mandelbrotPane);
         pack();
         setVisible(true);
     }
     
-    private ColorEditor colorMap;
-    private MandelbrotPane mandelbrotPane;
+    private final ColorEditor colorEditor;
+    private final MandelbrotPane mandelbrotPane;
 
     final JMenuBar constructMenuBar() {
         JMenuBar menuBar = new JMenuBar();
@@ -119,6 +119,7 @@ public class Mandelbrot extends JFrame {
         menuItem.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
                 LOGGER.info("Colors");
+                Mandelbrot.this.colorEditor.setVisible(true);
             }
         });
         menu.add(menuItem);

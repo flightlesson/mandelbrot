@@ -1,58 +1,150 @@
 package com.strongblackcoffee.mandelbrot;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  */
-public class ColorEditor implements ColorProvider {
+public class ColorEditor extends JDialog implements ColorProvider {
+    static final Logger LOGGER = LogManager.getLogger();
+    
+    ColorEditor(Frame owner) {
+        super(owner, "Colors", false);
+        this.setContentPane(constructContentPane());
+        this.setMinimumSize(new Dimension(100,100));
+        this.pack();
+    }
+    
+    Container constructContentPane() {
+        final JPanel panel = new JPanel(new BorderLayout());
+
+        JPanel colorPane= new JPanel() {
+            protected void paintComponent(Graphics g) {
+                paintColorPane(g);
+            }
+        };
+        panel.add(colorPane,BorderLayout.CENTER);
+
+        JPanel controls = new JPanel();
+        JButton dismissButton = new JButton("hide");
+        dismissButton.addActionListener(new ActionListener() {
+            @Override public void actionPerformed(ActionEvent e) {
+                ColorEditor.this.setVisible(false);
+            }
+        });
+        controls.add(dismissButton);
+        
+        panel.add(controls, BorderLayout.SOUTH);
+
+        return panel;
+    }
+    
+    Color[] fadein = new Color[] {
+        // ff - 0c = f3, f3 - 0c = e7 
+      new Color(0xFFFFFF),
+      new Color(0xF3F3F3),
+      new Color(0xE7E7E7),
+      new Color(0xDBDBDB),
+      new Color(0xCFCFCF),
+      new Color(0xC3C3C3),
+      new Color(0xB7B7B7),
+      new Color(0xABABAB),
+    };
+    
+    Color[] colors = new Color[] {
+        // Reds
+        new Color(0xFFEFEF),
+        new Color(0xFFE3E3),
+        new Color(0xFFD7D7),
+        new Color(0xFFCBCB),
+        new Color(0xFFBFBF),
+        new Color(0xFFB3B3),
+        new Color(0xFFA7A7),
+        new Color(0xFF9B9B),
+        new Color(0xFF8F8F),
+        new Color(0xFF8383),
+        
+        // Greens
+        new Color(0xEFFFEF),
+        new Color(0xDFFFDF),
+        new Color(0xCFFECF),
+        new Color(0xBFFFBF),
+        new Color(0xAFFFAF),
+        new Color(0x9FFF9F),
+        new Color(0x8FFF8F),
+        new Color(0x7FFF7F),
+        
+        new Color(0xEFEFFF),
+        new Color(0xE3E3FF),
+        new Color(0xD7D7FF),
+        new Color(0xCBCBFF),
+        new Color(0xBFBFFF),
+        new Color(0xB3B3FF),
+        new Color(0xA7A7FF),
+        new Color(0x9B9BFF),
+        new Color(0x8F8FFF),
+        new Color(0x8383FF),
+        
+    };
+    
+    int[] colorMap;
+    
+    void paintColorPane(Graphics g) {
+        LOGGER.info("paintColorPane: clip="+g.getClip()+", clipBounds="+g.getClipBounds());
+
+        for (int i=0; i < fadein.length; ++i) {
+            g.setColor(fadein[i]);
+            g.fillRect((32*i),0,32,32);
+        }
+        
+    }
+    
+    private void constructColorMap(int m) {
+        colorMap = new int[m];
+        int i=0;
+        for (Color c: fadein) {
+            if (i >= m) return;
+            colorMap[i] = c.getRGB();
+            ++i;
+        }
+        for (int scale=1; true; ++scale) {
+            for (Color c: colors) {
+                for (int j=0; j < scale; ++j) {
+                    if (i >= m) return;
+                    colorMap[i] = c.getRGB();
+                    ++i;
+                }
+            }
+        }
+    }
     
     @Override
-    public int getColor(int n) {
-        if (n == 0) return 0;
-        if (n == 1) return 0xFFFFFF;
-        if (n == 2) return 0xF8F8F8;
-        if (n == 3) return 0xEFEFEF;
-        if (n == 4) return 0xE8E8E8;
-        if (n == 5) return 0xDFDFDF;
-        if (n == 6) return 0xD8D8D8;
-        if (n == 7) return 0xCFCFCF;
-
-        if (n == 8) return 0xFFFFFF;
-        if (n < 10) return 0xFFEFEF;
-        if (n < 12) return 0xFFDFDF;
-        if (n < 14) return 0xFFCFCF;
-        if (n < 16) return 0xFFBFBF;
-        if (n < 18) return 0xFFAFAF;
-        if (n < 20) return 0xFF9F9F;
-        if (n < 22) return 0xFF8F8F;
-        if (n < 24) return 0xFF7F7F;
-        if (n < 26) return 0xFF6F6F;
-        if (n < 28) return 0xFF5F5F;
-        if (n < 30) return 0xFF4F4F;
-        if (n < 32) return 0xFF3F3F;
-        if (n < 34) return 0xFF2F2F;
-        if (n < 36) return 0xFF1F1F;
-        if (n < 38) return 0xFF0F0F;
-
-        if (n < 40)  return 0xFFFFFF;
-        if (n < 44)  return 0xDFFFDF;
-        if (n < 48)  return 0xBFFFBF;
-        if (n < 52)  return 0x9FFF9F;
-        if (n < 56)  return 0x7FFF7F;
-        if (n < 60)  return 0x5FFF5F;
-        if (n < 64)  return 0x3FFF3F;
-        if (n < 68)  return 0x1FFF1F;
-        if (n < 72)  return 0xFFFFFF;
-        if (n < 76)  return 0xDFDFFF;
-        if (n < 80)  return 0xBFBFFF;
-        if (n < 84)  return 0x9F9FFF;
-        if (n < 88)  return 0x7F7FFF;
-        if (n < 92)  return 0x5F5FFF;
-        if (n < 96)  return 0x3F3FFF;
-        if (n < 100) return 0x1F1FFF;
+    public int getColor(int n, int maxColors) {
         
-        return 0xFFFFFF;
+        if (n == 0) return 0;
+        --n;
+        
+        if (colorMap == null || colorMap.length != maxColors) {
+            constructColorMap(maxColors);
+        }
+        
+        return colorMap[n];
+        
     }
     
     

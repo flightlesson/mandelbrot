@@ -153,7 +153,7 @@ public class MandelbrotSet {
             for (int iy=0; iy < heightInPixels; ++iy) {
                 int n = isInMandelbrotSet(maxIterations, new Complex(x,y));
                 ++histogramData[n];
-                img.setRGB(ix,iy,colorProvider.getColor(n));
+                img.setRGB(ix,iy,colorProvider.getColor(n,maxIterations));
                 y += heightIncrement;
             }
             x += widthIncrement;

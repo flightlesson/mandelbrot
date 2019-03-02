@@ -51,7 +51,7 @@ class MandelbrotPane extends JPanel implements ComponentListener, MouseListener,
     public void resetClipping() {
         clipTopLeft = new Complex(-2.4, 1.4);
         clipBottomRight = new Complex(1.2, -1.4);
-        maxIterations = 100;
+        maxIterations = 500;
         resized = true;
         this.repaint();
     }
