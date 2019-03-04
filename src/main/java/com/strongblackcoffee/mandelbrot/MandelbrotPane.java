@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.logging.log4j.LogManager;
@@ -25,21 +26,25 @@ import org.apache.logging.log4j.Logger;
 class MandelbrotPane extends JPanel implements ComponentListener, MouseListener, MouseMotionListener {
     static final Logger LOGGER = LogManager.getLogger();
     
-    MandelbrotPane(ColorProvider colorMap) {
-        // setBounds(100,100,800,600);
+    MandelbrotPane(ColorProvider colorMap, MandelbrotStatisticsCollector statisticsCollector, 
+                   boolean initialAllowStretching) {
         LOGGER.info("MandelbrotPane constructor");
+        this.statisticsCollector = statisticsCollector;
         this.addComponentListener(this);
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
         
-        this.setBounds(0,0,800,600);
-        mandelbrotSet = new MandelbrotSet(colorMap);
+        this.setMinimumSize(new Dimension(600,600));
+        this.allowStretching = initialAllowStretching;
+        mandelbrotSet = new MandelbrotSet(colorMap, statisticsCollector);
         //img = image.updateImg(this.getWidth(), this.getHeight()); 
         this.setVisible(true);
         resetClipping();
+        LOGGER.info("MandelbrotPane constructor completed");
     }
     
-    MandelbrotSet mandelbrotSet;
+    private final MandelbrotStatisticsCollector statisticsCollector;
+    private MandelbrotSet mandelbrotSet;
     private BufferedImage img;
     boolean resized = false;
     Point clipBoxStart = null;
@@ -47,13 +52,23 @@ class MandelbrotPane extends JPanel implements ComponentListener, MouseListener,
     Complex clipTopLeft;
     Complex clipBottomRight;
     int maxIterations;
+    boolean allowStretching;
     
     public void resetClipping() {
         clipTopLeft = new Complex(-2.4, 1.4);
         clipBottomRight = new Complex(1.2, -1.4);
-        maxIterations = 500;
+        setMaxIterations(5000);
         resized = true;
         this.repaint();
+    }
+    
+    void setAllowStretching(boolean newAllowStretching) {
+        this.allowStretching = newAllowStretching;
+    }
+    
+    void setMaxIterations(int newMaxIterations) {
+        maxIterations = newMaxIterations;
+        this.statisticsCollector.recordMaxIterations(maxIterations);
     }
     
     
@@ -107,31 +122,32 @@ class MandelbrotPane extends JPanel implements ComponentListener, MouseListener,
     
     BufferedImage getImage() {
         //if (img == null) 
-        img = mandelbrotSet.asBufferedImage(this.getWidth(),this.getHeight(), clipTopLeft, clipBottomRight, maxIterations);
-        //img = mandelbrotSet.asBufferedImage(this.getWidth(),this.getHeight(), new Complex(-2.4,-1.4), new Complex(1.2,1.4), 100);
+        LOGGER.info("getImage()");
+        img = mandelbrotSet.asBufferedImage(this.getWidth(),this.getHeight(), clipTopLeft, clipBottomRight, allowStretching, maxIterations);
+        // img = mandelbrotSet.asBufferedImage(this.getWidth(),this.getHeight(), new Complex(-2.4,-1.4), new Complex(1.2,1.4), 100);
         return img;
     }
 
     @Override
     public void componentResized(ComponentEvent e) {
-        //LOGGER.debug("Resized: currentSize="+this.getBounds()+", newSize="+e.getComponent().getBounds());
+        LOGGER.debug("Resized: currentSize="+this.getBounds()+", newSize="+e.getComponent().getBounds());
         resized = true;
-        
+        this.statisticsCollector.recordImageSize(e.getComponent().getWidth(),e.getComponent().getHeight());
     }
 
     @Override
     public void componentMoved(ComponentEvent e) {
-        LOGGER.debug("Moved: " + e);
+        LOGGER.debug("componentMoved: " + e);
     }
 
     @Override
     public void componentShown(ComponentEvent e) {
-        LOGGER.debug("Shown: " + e);
+        LOGGER.debug("componentShown: " + e);
     }
 
     @Override
     public void componentHidden(ComponentEvent e) {
-        LOGGER.debug("Hidden: " + e);
+        LOGGER.debug("componentHidden: " + e);
     }
 
     @Override
@@ -170,7 +186,7 @@ class MandelbrotPane extends JPanel implements ComponentListener, MouseListener,
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        // do nothing
+        //LOGGER.debug("mouseMoved");
+        this.statisticsCollector.recordCurrentPoint(this.mandelbrotSet.getCell(e.getPoint())); 
     }
-    
 }
