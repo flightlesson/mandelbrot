@@ -1,29 +1,25 @@
 package com.strongblackcoffee.mandelbrot;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.logging.Level;
 import javax.swing.Box;
-import javax.swing.JDialog;
+import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.text.JTextComponent;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -76,15 +72,28 @@ public class Mandelbrot extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setJMenuBar(constructMenuBar());
         this.setMinimumSize(new Dimension(600,600));
-        colorEditor = new ColorEditor(this);
-        mandelbrotPane = new MandelbrotPane((ColorProvider)colorEditor);
-        this.setContentPane(mandelbrotPane);
+        this.colorEditor = new ColorEditor(this);
+        this.statisticsPane = new MandelbrotStatisticsPanel();
+        this.mandelbrotPane = new MandelbrotPane((ColorProvider)colorEditor, (MandelbrotStatisticsCollector) this.statisticsPane, this.stretchingIsEnabled);
+        LOGGER.info("got mandelbrotPane");
+        JPanel pane = new JPanel(new BorderLayout());
+        pane.add(this.mandelbrotPane, BorderLayout.CENTER);
+        pane.add(statisticsPane, BorderLayout.SOUTH);
+        this.setContentPane(pane);
+        LOGGER.info("Mandelbrot pack()");
         pack();
+        LOGGER.info("Mandelbrot constructing setVisible()");
         setVisible(true);
     }
     
     private final ColorEditor colorEditor;
+    private final MandelbrotStatisticsPanel statisticsPane;
     private final MandelbrotPane mandelbrotPane;
+    
+    /**
+     * When the aspect ratio is 1to1, the view's deltaX and deltaY must be the same.
+     */
+    private boolean stretchingIsEnabled;
 
     final JMenuBar constructMenuBar() {
         JMenuBar menuBar = new JMenuBar();
@@ -105,33 +114,59 @@ public class Mandelbrot extends JFrame {
 
         menuBar.add(menu);
         
-        menu = new JMenu("Configure");
+        menu = new JMenu("View");
 
-        menuItem = new JMenuItem("Iterations");
+        this.stretchingIsEnabled = false;
+        menuItem = new JMenuItem("Enable Stretching");
         menuItem.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
-                LOGGER.info("Iterations");
+                JMenuItem item = (JMenuItem) e.getSource();
+                LOGGER.info("Toggle Aspect Ratio,  stretchingIsEnabled="+Mandelbrot.this.stretchingIsEnabled
+                            +", text="+item.getText());
+                if (Mandelbrot.this.stretchingIsEnabled) {
+                    Mandelbrot.this.stretchingIsEnabled = false;
+                    Mandelbrot.this.mandelbrotPane.setAllowStretching(false);
+                    item.setText("Enable Stretching");
+                } else {
+                    Mandelbrot.this.stretchingIsEnabled = true;
+                    Mandelbrot.this.mandelbrotPane.setAllowStretching(true);
+                    item.setText("Maintain Perspective");
+                }
             }
         });
         menu.add(menuItem);
         
-        menuItem = new JMenuItem("Colors");
+        menuItem = new JMenuItem("Show Color Editor");
         menuItem.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
-                LOGGER.info("Colors");
+                LOGGER.info("Show Color Editor");
                 Mandelbrot.this.colorEditor.setVisible(true);
             }
         });
         menu.add(menuItem);
-        
-        menuBar.add(menu);
-        
-        menu = new JMenu("View");
 
-        menuItem = new JMenuItem("Statistics");
+        menuItem = new JMenuItem("Show Distance Histogram");
         menuItem.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
-                LOGGER.info("Statistics");
+                LOGGER.info("Show Distance Histogram");
+            }
+        });
+        menu.add(menuItem);
+        
+        menuItem = new JMenuItem("Zoom in");
+        menuItem.setAccelerator(KeyStroke.getKeyStroke('Z',InputEvent.CTRL_DOWN_MASK));
+        menuItem.addActionListener(new ActionListener() {
+            @Override public void actionPerformed(ActionEvent e) {
+                LOGGER.info("Zoom in");
+            }
+        });
+        menu.add(menuItem);
+        
+        menuItem = new JMenuItem("Zoom out");
+        menuItem.setAccelerator(KeyStroke.getKeyStroke('Z',InputEvent.SHIFT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK));
+        menuItem.addActionListener(new ActionListener() {
+            @Override public void actionPerformed(ActionEvent e) {
+                LOGGER.info("Zoom out");
             }
         });
         menu.add(menuItem);
