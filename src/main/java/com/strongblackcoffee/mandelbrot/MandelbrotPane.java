@@ -179,9 +179,12 @@ class MandelbrotPane extends JPanel implements ComponentListener, MouseListener,
     
     BufferedImage getImage() {
         //if (img == null) 
-        LOGGER.info("getImage()");
+        LOGGER.info("recomputing image ...");
+        long startedAt = System.nanoTime();
         //img = mandelbrotSet.asBufferedImage(this.getWidth(),this.getHeight(), clipTopLeft, clipBottomRight, maxIterations);
         img = mandelbrotSet.asBufferedImage(this.getWidth(),this.getHeight(), this.centerOfWindow, this.delta, this.maxIterations);
+        double duration = (System.nanoTime() - startedAt) / 1000000;
+        LOGGER.info("... done, took " + duration + "ms");
         return img;
     }
 
