@@ -9,7 +9,6 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import javax.swing.Box;
-import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -17,15 +16,16 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import javax.swing.text.JTextComponent;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.math3.complex.Complex;
+import org.apache.commons.math3.complex.ComplexFormat;
+import org.apache.commons.math3.exception.MathParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,13 +38,19 @@ public class Mandelbrot extends JFrame {
     static private final String USAGE = "$app [options[]";
     static private final String HEADER = "Mandelbrot and Julia set viewer.\nOptions are:";
     static private final String FOOTER = "\n"
-            +"Provides views into the Mandelbrot and Julia sets."
+            +"\nProvides views into the Mandelbrot and Julia sets."
+            +"\n"
+            +"\nFor example, these lead to interesting movies"
+            +"\n  -c 0.39728754255254+0.13503122419329i -z 0.99 -m 5000"
             +"\n";
     static private final Options OPTIONS;
     static {
         OPTIONS = new Options();
         OPTIONS.addOption("h","help",false,"Print this message.");
-        OPTIONS.addOption(null,"longopt",false,"Example of an option that only has a long name.");
+        OPTIONS.addOption("c","center",true,"Initial center point. [(-0.2,0)]");
+        OPTIONS.addOption("z","zoom-factor",true,"Initial zoom factor. [1.2]");
+        OPTIONS.addOption("m","movie-mode",true,"Movie mode, specifies the number of frames to create. [1]");
+        
         // Add application specific options here.
     }
     
@@ -55,8 +61,32 @@ public class Mandelbrot extends JFrame {
                 (new HelpFormatter()).printHelp(USAGE,HEADER,OPTIONS,FOOTER,false);
                 System.exit(1);
             }
+            
+            Complex center = new Complex(-0.2,0);
+            if (cmdline.hasOption("center")) {
+                try {
+                    center = ComplexFormat.getInstance().parse(cmdline.getOptionValue("center"));
+                } catch (MathParseException ex) {
+                    LOGGER.warn("-center " + cmdline.getOptionValue("center") + ": " + ex.getLocalizedMessage());
+                }
+            }
+            
+            double zoomFactor = 0.8;
+            if (cmdline.hasOption("zoom-factor")) {
+                try {
+                    zoomFactor = Double.parseDouble(cmdline.getOptionValue("zoom-factor"));
+                } catch (NumberFormatException ex) {
+                    LOGGER.warn("-zoom-factor "+ cmdline.getOptionValue("zoom-factor") + ": " + ex.getLocalizedMessage());
+                }
+            }
+            
+            if (cmdline.hasOption("movie-mode")) {
+                
+            }
+            
+            
         
-            Mandelbrot application = new Mandelbrot();
+            Mandelbrot application = new Mandelbrot(center, zoomFactor);
         } catch (ParseException ex) {
             // can't use logger; it's not configured
             System.err.println(ex.getMessage());
@@ -64,7 +94,7 @@ public class Mandelbrot extends JFrame {
         }
     }
     
-    public Mandelbrot() {
+    public Mandelbrot(Complex center, double zoomFactor) {
         super("Mandelbrot");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setJMenuBar(constructMenuBar());
@@ -74,7 +104,7 @@ public class Mandelbrot extends JFrame {
         //this.statisticsPane = new MandelbrotStatisticsPanel();
         //this.mandelbrotPane = new MandelbrotPane((ColorProvider)colorEditor, this.statisticsPane);
         // } IS {
-        this.mandelbrotPane = new MandelbrotPane((ColorProvider) colorEditor);
+        this.mandelbrotPane = new MandelbrotPane((ColorProvider) colorEditor, center, 0.009, 100, zoomFactor);
         this.statisticsPane = this.mandelbrotPane.getStatisticsPane();
         // }
         LOGGER.info("got mandelbrotPane");

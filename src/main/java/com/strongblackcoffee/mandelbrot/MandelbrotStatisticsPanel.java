@@ -25,9 +25,9 @@ public class MandelbrotStatisticsPanel extends JPanel {
     
     public MandelbrotStatisticsPanel(final Callback callback) {
         super();
-        this.add(configureTextField(centerXField,"center x",11, null));
-        this.add(configureTextField(centerYField,"center y", 9, null));
-        this.add(configureTextField(deltaField,  "delta", 9, null));
+        this.add(configureTextField(centerXField,"center x",16, null));
+        this.add(configureTextField(centerYField,"center y", 16, null));
+        this.add(configureTextField(deltaField,  "delta", 16, null));
         this.add(configureTextField(maxIterField,"max iterations", 5, new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
                 String changedToString = ((JTextField)e.getSource()).getText();
@@ -69,12 +69,12 @@ public class MandelbrotStatisticsPanel extends JPanel {
     }
     
     public void setCenter(Complex point) {
-        this.centerXField.setText(String.format("%g", point.getReal()));
-        this.centerYField.setText(String.format("%g", point.getImaginary()));
+        this.centerXField.setText(String.format("%16.14f", point.getReal()));
+        this.centerYField.setText(String.format("%16.14f", point.getImaginary()));
     }
     
     public void setDelta(double delta) {
-        this.deltaField.setText(String.format("%g",delta));
+        this.deltaField.setText(String.format("%16.14f",delta));
     }
     
 }

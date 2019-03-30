@@ -25,8 +25,12 @@ class MandelbrotPane extends JPanel implements ComponentListener, MouseListener,
         MouseMotionListener, MandelbrotStatisticsPanel.Callback {
     static final Logger LOGGER = LogManager.getLogger();
     
-    MandelbrotPane(ColorProvider colorMap) {
+    MandelbrotPane(ColorProvider colorMap, Complex center, double delta, int maxDepth, double zoomFactor) {
         LOGGER.info("MandelbrotPane constructor");
+        this.resetToCenter = center;
+        this.resetToDelta = delta;
+        this.resetToMaxDepth = maxDepth;
+        this.resetToZoomFactor = zoomFactor;
         this.statisticsPanel = new MandelbrotStatisticsPanel(this);
         this.addComponentListener(this);
         this.addMouseListener(this);
@@ -39,7 +43,11 @@ class MandelbrotPane extends JPanel implements ComponentListener, MouseListener,
         reset();
         LOGGER.info("MandelbrotPane constructor completed");
     }
-    
+
+    private Complex resetToCenter;
+    private double resetToDelta;
+    private int resetToMaxDepth;
+    private double resetToZoomFactor;    
     private final MandelbrotStatisticsPanel statisticsPanel;
     private MandelbrotSet mandelbrotSet;
     private BufferedImage img;
@@ -56,10 +64,10 @@ class MandelbrotPane extends JPanel implements ComponentListener, MouseListener,
         // window is centerpoint and zoom, where  zoom is a number > 1.
         // zoom = 1 means draw X  = -2.4, +2 
         
-        setCenterOfWindow(new Complex(-0.2,0.0),false);
-        setDelta(0.009,false);
-        setMaxIterations(100,false);
-        zoomFactor = 0.8;
+        setCenterOfWindow(resetToCenter,false);
+        setDelta(resetToDelta,false);
+        setMaxIterations(resetToMaxDepth,false);
+        zoomFactor = resetToZoomFactor;
         viewChanged = true;
         this.repaint();
     }
