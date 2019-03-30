@@ -1,6 +1,8 @@
 package com.strongblackcoffee.mandelbrot;
 
+import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
@@ -111,10 +113,10 @@ public class MandelbrotSet {
         return 0;
     }
     
-    private MandelbrotStatisticsCollector statisticsCollector;
+    private MandelbrotStatisticsPanel statisticsCollector;
     private ColorProvider colorProvider;
     
-    public MandelbrotSet(ColorProvider colorMap, MandelbrotStatisticsCollector statisticsCollector) {
+    public MandelbrotSet(ColorProvider colorMap, MandelbrotStatisticsPanel statisticsCollector) {
         LOGGER.info("MandelbrotSet constructor");
         this.statisticsCollector = statisticsCollector;
         this.colorProvider = colorMap;
@@ -159,66 +161,88 @@ public class MandelbrotSet {
         return new Cell(point.x, point.y, 0);
     }
     
-    /**
-     * Returns a view into the Mandelbrot set.
-     * @param widthInPixels      width as number of pixels
-     * @param heightInPixels     height as number of pixels
-     * @param upperLeftCorner    upper left corner of the rectangle to be drawn
-     * @param lowerRightCorner   lower right corner of the rectangle to be drawn
-     * @param maxIterations      maximum number of iterations
-     * @return the view into the Mandelbrot set
-     */
-    public BufferedImage asBufferedImage(int widthInPixels, int heightInPixels, Complex upperLeftCorner, Complex lowerRightCorner, boolean allowStretching, int maxIterations) {
-        // LOGGER.info("... asBufferedImage");
+    
+    public BufferedImage asBufferedImage(int widthInPixels, int heightInPixels, Complex center, double delta, int maxIterations) {
         if (widthInPixels < 2 || heightInPixels < 2) {
-            LOGGER.fatal("widthInPixels="+widthInPixels+" and heightInPixels="+heightInPixels+" must both be greater than 2!");
-            System.exit(1);
+            throw new IllegalArgumentException("widthInPixels="+widthInPixels+" and heightInPixels="+heightInPixels+" must both be > 1");
         }
-        
-        this.widthInPixels = widthInPixels;
-        this.heightInPixels = heightInPixels;
-        this.maxIterations = maxIterations;
         
         histogramData = new int[maxIterations+1];
-        cells = new Cell[widthInPixels * heightInPixels];
-        
-        double widthIncrement = (lowerRightCorner.getReal() - upperLeftCorner.getReal()) / (widthInPixels - 1);
-        double heightIncrement = (upperLeftCorner.getImaginary() - lowerRightCorner.getImaginary()) / (heightInPixels - 1);
-        
-        if (!allowStretching) {
-            if (widthIncrement > heightIncrement) {
-                heightIncrement = widthIncrement;
-            } else if (widthIncrement < heightIncrement) {
-                widthIncrement = heightIncrement;
-            }
-        }
-        
-        this.statisticsCollector.recordDeltas(widthIncrement, heightIncrement);
-        
-//        LOGGER.info("width from " + upperLeftCorner.getReal() + " to " + lowerRightCorner.getReal() 
-//                    + " in " + widthInPixels + " increments of " + widthIncrement + " is "
-//                    + ( upperLeftCorner.getReal() + (widthInPixels * widthIncrement) ));
-//        LOGGER.info("height from " + lowerRightCorner.getImaginary() + " to " + upperLeftCorner.getImaginary() 
-//                    + " in " + heightInPixels + " increments of " + heightIncrement + " is "
-//                    + ( lowerRightCorner.getImaginary() + (heightInPixels * heightIncrement) ));
-
         BufferedImage img = new BufferedImage(widthInPixels,heightInPixels,BufferedImage.TYPE_INT_RGB);
         
-        double y = lowerRightCorner.getImaginary();
-        for (int iy=0; iy < heightInPixels; ++iy) {
-            double x = upperLeftCorner.getReal();
-            for (int ix=0; ix < widthInPixels; ++ix) {
-                int n = isInMandelbrotSet(maxIterations, new Complex(x,y));
-                cells[iy*widthInPixels + ix] = new Cell(x,y,n);
-                ++histogramData[n];
-                img.setRGB(ix,iy,colorProvider.getColor(n,maxIterations));
-                x += widthIncrement;
+        double wx0 = center.getReal() - (widthInPixels / 2) * delta;
+        double wy0 = center.getImaginary() - (heightInPixels/ 2) * delta;
+
+        double wx = wx0;
+        for (int x = 0; x < widthInPixels; ++x) {
+            double wy = wy0;
+            for (int y = 0; y < heightInPixels; ++y) {
+                int distance = isInMandelbrotSet(maxIterations, new Complex(wx,wy));
+                ++histogramData[distance];
+                img.setRGB(x,y,colorProvider.getColor(distance,maxIterations));
+                wy += delta;
             }
-            y += heightIncrement;
+            wx += delta;
         }
         
         return img;
     }
+    
+//    /**
+//     * Returns a view into the Mandelbrot set.
+//     * @param widthInPixels      width as number of pixels
+//     * @param heightInPixels     height as number of pixels
+//     * @param upperLeftCorner    upper left corner of the rectangle to be drawn
+//     * @param lowerRightCorner   lower right corner of the rectangle to be drawn
+//     * @param maxIterations      maximum number of iterations
+//     * @return the view into the Mandelbrot set
+//     */
+//    public BufferedImage asBufferedImage(int widthInPixels, int heightInPixels, Complex upperLeftCorner, Complex lowerRightCorner, int maxIterations) {
+//        if (LOGGER.isDebugEnabled()) {
+//            LOGGER.debug("asBufferedImage(widthInPixels="+widthInPixels+",heightInPixels="+heightInPixels+",upperLeftCorner,lowerRightCorner,maxIterations="+maxIterations+")");
+//        }
+//        if (widthInPixels < 2 || heightInPixels < 2) {
+//            LOGGER.fatal("widthInPixels="+widthInPixels+" and heightInPixels="+heightInPixels+" must both be greater than 2!");
+//            System.exit(1);
+//        }
+//        
+//        this.widthInPixels = widthInPixels;
+//        this.heightInPixels = heightInPixels;
+//        this.maxIterations = maxIterations;
+//        
+//        histogramData = new int[maxIterations+1];
+//        cells = new Cell[widthInPixels * heightInPixels];
+//        
+//        double widthIncrement = (lowerRightCorner.getReal() - upperLeftCorner.getReal()) / (widthInPixels - 1);
+//        double heightIncrement = (upperLeftCorner.getImaginary() - lowerRightCorner.getImaginary()) / (heightInPixels - 1);
+//        
+//        if (LOGGER.isDebugEnabled()) {
+//            LOGGER.debug("width from " + upperLeftCorner.getReal() + " to " + lowerRightCorner.getReal() 
+//                    + " in " + widthInPixels + " increments of " + widthIncrement + " is "
+//                    + ( upperLeftCorner.getReal() + (widthInPixels * widthIncrement) ));
+//            LOGGER.debug("height from " + lowerRightCorner.getImaginary() + " to " + upperLeftCorner.getImaginary() 
+//                    + " in " + heightInPixels + " increments of " + heightIncrement + " is "
+//                    + ( lowerRightCorner.getImaginary() + (heightInPixels * heightIncrement) ));
+//        }
+//
+//        BufferedImage img = new BufferedImage(widthInPixels,heightInPixels,BufferedImage.TYPE_INT_RGB);
+//        
+//        double y = lowerRightCorner.getImaginary();
+//        for (int iy=0; iy < heightInPixels; ++iy) {
+//            double x = upperLeftCorner.getReal();
+//            for (int ix=0; ix < widthInPixels; ++ix) {
+//                int n = isInMandelbrotSet(maxIterations, new Complex(x,y));
+//                cells[iy*widthInPixels + ix] = new Cell(x,y,n);
+//                ++histogramData[n];
+//                img.setRGB(ix,iy,colorProvider.getColor(n,maxIterations));
+//                x += widthIncrement;
+//            }
+//            y += heightIncrement;
+//        }
+//        
+//        LOGGER.debug("returning img");
+//        return img;
+//    }
     
     /**
      * Returns the histogram data generated by the most recent 

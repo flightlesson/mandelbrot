@@ -35,13 +35,10 @@ import org.apache.logging.log4j.Logger;
 public class Mandelbrot extends JFrame {
     static final Logger LOGGER = LogManager.getLogger();
     
-    static private final String USAGE = "replace this with stuff that will appear after 'usage:'";
-    static private final String HEADER = "Replace this with a brief summary describing what the application does.\nOptions are:";
+    static private final String USAGE = "$app [options[]";
+    static private final String HEADER = "Mandelbrot and Julia set viewer.\nOptions are:";
     static private final String FOOTER = "\n"
-            +"Replace this with a longer description of the application "
-            +"that answers 'what does this do?' and 'why should I use it?'.\n"
-            +"\n"
-            +"I like to use a blank line to separate paragraphs.\n"
+            +"Provides views into the Mandelbrot and Julia sets."
             +"\n";
     static private final Options OPTIONS;
     static {
@@ -73,8 +70,13 @@ public class Mandelbrot extends JFrame {
         this.setJMenuBar(constructMenuBar());
         this.setMinimumSize(new Dimension(600,600));
         this.colorEditor = new ColorEditor(this);
-        this.statisticsPane = new MandelbrotStatisticsPanel();
-        this.mandelbrotPane = new MandelbrotPane((ColorProvider)colorEditor, (MandelbrotStatisticsCollector) this.statisticsPane, this.stretchingIsEnabled);
+        // WAS {
+        //this.statisticsPane = new MandelbrotStatisticsPanel();
+        //this.mandelbrotPane = new MandelbrotPane((ColorProvider)colorEditor, this.statisticsPane);
+        // } IS {
+        this.mandelbrotPane = new MandelbrotPane((ColorProvider) colorEditor);
+        this.statisticsPane = this.mandelbrotPane.getStatisticsPane();
+        // }
         LOGGER.info("got mandelbrotPane");
         JPanel pane = new JPanel(new BorderLayout());
         pane.add(this.mandelbrotPane, BorderLayout.CENTER);
@@ -90,11 +92,6 @@ public class Mandelbrot extends JFrame {
     private final MandelbrotStatisticsPanel statisticsPane;
     private final MandelbrotPane mandelbrotPane;
     
-    /**
-     * When the aspect ratio is 1to1, the view's deltaX and deltaY must be the same.
-     */
-    private boolean stretchingIsEnabled;
-
     final JMenuBar constructMenuBar() {
         JMenuBar menuBar = new JMenuBar();
         JMenu menu;
@@ -108,7 +105,6 @@ public class Mandelbrot extends JFrame {
             @Override public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
-            
         });
         menu.add(menuItem);
 
@@ -116,27 +112,8 @@ public class Mandelbrot extends JFrame {
         
         menu = new JMenu("View");
 
-        this.stretchingIsEnabled = false;
-        menuItem = new JMenuItem("Enable Stretching");
-        menuItem.addActionListener(new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
-                JMenuItem item = (JMenuItem) e.getSource();
-                LOGGER.info("Toggle Aspect Ratio,  stretchingIsEnabled="+Mandelbrot.this.stretchingIsEnabled
-                            +", text="+item.getText());
-                if (Mandelbrot.this.stretchingIsEnabled) {
-                    Mandelbrot.this.stretchingIsEnabled = false;
-                    Mandelbrot.this.mandelbrotPane.setAllowStretching(false);
-                    item.setText("Enable Stretching");
-                } else {
-                    Mandelbrot.this.stretchingIsEnabled = true;
-                    Mandelbrot.this.mandelbrotPane.setAllowStretching(true);
-                    item.setText("Maintain Perspective");
-                }
-            }
-        });
-        menu.add(menuItem);
-        
         menuItem = new JMenuItem("Show Color Editor");
+        menuItem.setEnabled(false);
         menuItem.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
                 LOGGER.info("Show Color Editor");
@@ -145,7 +122,10 @@ public class Mandelbrot extends JFrame {
         });
         menu.add(menuItem);
 
+        // The distance histogram shows how many pixels are at
+        // each distance, or number of iterations, from the set.
         menuItem = new JMenuItem("Show Distance Histogram");
+        menuItem.setEnabled(false);
         menuItem.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
                 LOGGER.info("Show Distance Histogram");
@@ -158,6 +138,7 @@ public class Mandelbrot extends JFrame {
         menuItem.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
                 LOGGER.info("Zoom in");
+                mandelbrotPane.zoomIn();
             }
         });
         menu.add(menuItem);
@@ -167,6 +148,7 @@ public class Mandelbrot extends JFrame {
         menuItem.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
                 LOGGER.info("Zoom out");
+                mandelbrotPane.zoomOut();
             }
         });
         menu.add(menuItem);
@@ -175,7 +157,7 @@ public class Mandelbrot extends JFrame {
         menuItem.setAccelerator(KeyStroke.getKeyStroke('R',InputEvent.CTRL_DOWN_MASK));
         menuItem.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
-                mandelbrotPane.resetClipping();
+                mandelbrotPane.reset();
             }
         });
         menu.add(menuItem);
