@@ -40,7 +40,7 @@ public class SetGenerator {
     }
     
     /**
-     * Calculates z(i+1) = z(i) + c until z's magnitude is greater than 2 or maxIterations
+     * Calculates z(i+1) = z(i)^2 + c until z's magnitude is greater than 2 or maxIterations
      * have been performed.  Returns the number of iterations required for z to become
      * greater than 2 or returns 0 if z never became greater than 2.
      */
