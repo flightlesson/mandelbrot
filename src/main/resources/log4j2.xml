@@ -5,8 +5,13 @@
     </Console>
   </Appenders>
   <Loggers>
-
-    <Root level="info">
+    <Logger name="com.strongblackcoffee.mandelbrot.ColorEditor" additivity="false" level="debug"><AppenderRef ref="Console"/></Logger>
+    <Logger name="com.strongblackcoffee.mandelbrot.ColorProvider" additivity="false" level="debug"><AppenderRef ref="Console"/></Logger>
+    <Logger name="com.strongblackcoffee.mandelbrot.Mandelbrot" additivity="false" level="info"><AppenderRef ref="Console"/></Logger>
+    <Logger name="com.strongblackcoffee.mandelbrot.MandelbrotPane" additivity="false" level="info"><AppenderRef ref="Console"/></Logger>
+    <Logger name="com.strongblackcoffee.mandelbrot.MandelbrotSet" additivity="false" level="info"><AppenderRef ref="Console"/></Logger>
+    <Logger name="com.strongblackcoffee.mandelbrot.MandelbrotStatisticsPanel" additivity="false" level="debug"><AppenderRef ref="Console"/></Logger>
+    <Root level="debug">
       <AppenderRef ref="Console"/>
     </Root>
   </Loggers>
