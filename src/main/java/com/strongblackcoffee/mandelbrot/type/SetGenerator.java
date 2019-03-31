@@ -8,10 +8,10 @@ import org.apache.logging.log4j.LogManager;
 public class SetGenerator {
     static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger();
     
-    public static <C extends MJComplex> MJSet generateMJSet(int viewWidth, int viewHeight, C windowPointAtZeroZero, 
+    public static <C extends MJComplex> MJDataSet generateMJSet(int viewWidth, int viewHeight, C windowPointAtZeroZero, 
             Class<? extends MJDouble> mjDoubleCls, double windowPointDelta, int maxIterations) {
         //MJSet = new MJSet(int viewWidth, int viewHeight, Complex windowPointAtZeroZero, double windowPointDelta)
-        MJSet mjSet= new MJSet<C>(viewWidth, viewHeight, windowPointAtZeroZero, windowPointDelta);
+        MJDataSet mjSet= new MJDataSet<C>(viewWidth, viewHeight, windowPointAtZeroZero, windowPointDelta);
         MJDouble d = null;
         try {
             d = mjDoubleCls.newInstance().set(windowPointDelta);

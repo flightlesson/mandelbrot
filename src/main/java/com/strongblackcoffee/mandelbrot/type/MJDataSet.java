@@ -1,18 +1,32 @@
 package com.strongblackcoffee.mandelbrot.type;
 
 import com.hellblazer.utils.math.DoubleDouble;
+import com.strongblackcoffee.mandelbrot.Mandelbrot;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import org.apache.commons.math3.complex.Complex;
+import org.apache.commons.math3.complex.ComplexFormat;
+import org.apache.commons.math3.exception.MathParseException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Represents view into a Mandelbrot or Julia set.
  */
-public class MJSet<C extends MJComplex> {
+public class MJDataSet<C extends MJComplex> {
+    
+    
+    
     private final int viewWidth;
     private final int viewHeight;
     private final C windowPointAtZeroZero;
     private final double windowPointDelta;
     private final int[][] distanceFromSet;
     
-    public MJSet(int viewWidth, int viewHeight, C windowPointAtZeroZero, double windowPointDelta) {
+    public MJDataSet(int viewWidth, int viewHeight, C windowPointAtZeroZero, double windowPointDelta) {
         this.viewWidth = viewWidth;
         this.viewHeight = viewHeight;
         this.windowPointAtZeroZero = windowPointAtZeroZero;
