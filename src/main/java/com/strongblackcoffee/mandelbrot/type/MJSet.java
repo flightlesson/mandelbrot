@@ -1,18 +1,18 @@
-package com.strongblackcoffee.mandelbrot.doubledouble;
+package com.strongblackcoffee.mandelbrot.type;
 
 import com.hellblazer.utils.math.DoubleDouble;
 
 /**
  * Represents view into a Mandelbrot or Julia set.
  */
-public class MJSet {
+public class MJSet<C extends MJComplex> {
     private final int viewWidth;
     private final int viewHeight;
-    private final Complex windowPointAtZeroZero;
+    private final C windowPointAtZeroZero;
     private final double windowPointDelta;
     private final int[][] distanceFromSet;
     
-    public MJSet(int viewWidth, int viewHeight, Complex windowPointAtZeroZero, double windowPointDelta) {
+    public MJSet(int viewWidth, int viewHeight, C windowPointAtZeroZero, double windowPointDelta) {
         this.viewWidth = viewWidth;
         this.viewHeight = viewHeight;
         this.windowPointAtZeroZero = windowPointAtZeroZero;
