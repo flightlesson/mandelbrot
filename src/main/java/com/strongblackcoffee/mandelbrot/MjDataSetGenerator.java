@@ -1,5 +1,6 @@
 package com.strongblackcoffee.mandelbrot;
 
+import java.lang.invoke.MethodHandles;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -12,7 +13,7 @@ import org.apache.logging.log4j.Logger;
  *
  */
 public class MjDataSetGenerator {
-    static final Logger LOGGER = LogManager.getLogger();
+    static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
     
     static private final String USAGE = "$app [options[]";
     static private final String HEADER = "Mandelbrot and Julia set data generator.\nOptions are:";

@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.lang.invoke.MethodHandles;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -21,7 +22,7 @@ import org.apache.logging.log4j.Logger;
  *
  */
 public class ColorEditor extends JDialog implements ColorProvider {
-    static final Logger LOGGER = LogManager.getLogger();
+    static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
     
     ColorEditor(Frame owner) {
         super(owner, "Colors", false);

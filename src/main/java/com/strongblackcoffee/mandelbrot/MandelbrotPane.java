@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.lang.invoke.MethodHandles;
 import javax.swing.JPanel;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.logging.log4j.LogManager;
@@ -23,7 +24,7 @@ import org.apache.logging.log4j.Logger;
  */
 class MandelbrotPane extends JPanel implements ComponentListener, MouseListener, 
         MouseMotionListener, MandelbrotStatisticsPanel.Callback {
-    static final Logger LOGGER = LogManager.getLogger();
+    static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
     
     MandelbrotPane(ColorProvider colorMap, Complex center, double delta, int maxDepth, double zoomFactor) {
         LOGGER.info("MandelbrotPane constructor");

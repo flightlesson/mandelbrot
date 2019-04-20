@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.nio.charset.StandardCharsets;
 import javax.swing.Box;
 import javax.swing.JEditorPane;
@@ -33,7 +34,7 @@ import org.apache.logging.log4j.Logger;
  * The application frame and menus.
  */
 public class Mandelbrot extends JFrame {
-    static final Logger LOGGER = LogManager.getLogger();
+    static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
     
     static private final String USAGE = "$app [options[]";
     static private final String HEADER = "Mandelbrot and Julia set viewer.\nOptions are:";
