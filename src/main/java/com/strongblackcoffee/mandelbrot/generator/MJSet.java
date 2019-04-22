@@ -148,21 +148,23 @@ public class MJSet {
         }
     }
     
-    public static class Main {
+    //
+    //
+    //
         
-        static private final String USAGE = "$app [options] centerX centerY delta width height maxIterations";
-        static private final String HEADER = "Mandlebrot/Julia set generator:";
-        static private final String FOOTER = "\n"
-                +"\nGenerates a Mandlebrot or Julia set."
-                +"\n";
-        static private final Options OPTIONS;
-        static {
-            OPTIONS = new Options();
-            OPTIONS.addOption("h","help",false,"Print this message.");
-            OPTIONS.addOption("t","threads",true,"'-t 8' uses 8 threads instead of the default, 4.");
-            OPTIONS.addOption("o","output",true,"save data as XML");
-            // OPTIONS.addOption("j","julia",true,"'-j 1.2,3.4' generates a Julia set with c=1.2+3.4i");
-        }
+    static private final String USAGE = "$app [options] centerX centerY delta width height maxIterations";
+    static private final String HEADER = "Mandlebrot/Julia set generator:";
+    static private final String FOOTER = "\n"
+            +"\nGenerates a Mandlebrot or Julia set."
+            +"\n";
+    static private final Options OPTIONS;
+    static {
+        OPTIONS = new Options();
+        OPTIONS.addOption("h","help",false,"Print this message.");
+        OPTIONS.addOption("t","threads",true,"'-t 8' uses 8 threads instead of the default, 4.");
+        OPTIONS.addOption("o","output",true,"save data as XML");
+        // OPTIONS.addOption("j","julia",true,"'-j 1.2,3.4' generates a Julia set with c=1.2+3.4i");
+    }
     
     static public void main(String[] args) {
         try {
@@ -212,6 +214,4 @@ public class MJSet {
             (new HelpFormatter()).printHelp(USAGE,HEADER,OPTIONS,FOOTER,false);
         }
     }
-    }
-    
 }
