@@ -1,5 +1,6 @@
 package com.strongblackcoffee.mandelbrot.generator;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -159,7 +160,8 @@ public class MJSet {
             OPTIONS = new Options();
             OPTIONS.addOption("h","help",false,"Print this message.");
             OPTIONS.addOption("t","threads",true,"'-t 8' uses 8 threads instead of the default, 4.");
-            OPTIONS.addOption("j","julia",true,"'-j 1.2,3.4' generates a Julia set with c=1.2+3.4i");
+            OPTIONS.addOption("o","output",true,"save data as XML");
+            // OPTIONS.addOption("j","julia",true,"'-j 1.2,3.4' generates a Julia set with c=1.2+3.4i");
         }
     
     static public void main(String[] args) {
@@ -188,7 +190,19 @@ public class MJSet {
             ExecutorService pool = Executors.newFixedThreadPool(nthreads);
             mjSet.generate(pool);
             LOGGER.info("... generation complete.");
-            PrintWriter out = new PrintWriter(System.out);
+            
+            String pathToXMLfile = cmdline.getOptionValue("output","-");
+            PrintWriter out;
+            if ("-".equals(pathToXMLfile)) {
+                out = new PrintWriter(System.out);
+            } else {
+                try {
+                    out = new PrintWriter(pathToXMLfile);
+                } catch (FileNotFoundException ex) {
+                    LOGGER.error(ex.getLocalizedMessage());
+                    out = new PrintWriter(System.out);
+                }
+            }
             mjSet.toXML(out);
             out.close();
             
