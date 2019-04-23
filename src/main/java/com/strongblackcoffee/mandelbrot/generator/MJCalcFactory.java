@@ -81,16 +81,14 @@ public class MJCalcFactory {
                     delta, maxIterations, callback);
         }
         
-        // FIXME
-        
-        DoubleDouble z0X = DoubleDouble.valueOf(centerX.toString()).subtract(new DoubleDouble(width/2 * delta));
-        DoubleDouble z0Y = DoubleDouble.valueOf(centerY.toString()).subtract(new DoubleDouble(height/2 * delta));
-        DoubleDouble cX = null;
-        DoubleDouble cY = null;
+        BigDecimal z0X = centerX.subtract(BigDecimal.valueOf(width/2 * delta));
+        BigDecimal z0Y = centerY.subtract(BigDecimal.valueOf(height/2 * delta));
+        BigDecimal cX = null;
+        BigDecimal cY = null;
             
-        return new MJCalcDoubleDouble(width, row, 
-                z0X, z0Y.add(new DoubleDouble(row * delta)), 
-                cX, cY, 
-                delta, maxIterations, callback);
+        return new MJCalcBigDecimal(width, row, 
+                   z0X, z0Y.add(BigDecimal.valueOf(row * delta)), 
+                   cX, cY, 
+                   delta, maxIterations, callback);
     }
 }
