@@ -16,8 +16,8 @@ import org.apache.logging.log4j.Logger;
  * precision implementation might run too slowly.
  */
 public class MJCalcFactory {
-    static final String thisSimpleName = MethodHandles.lookup().lookupClass().getSimpleName();
-    static final Logger LOGGER = LogManager.getLogger(thisSimpleName);
+    static final String SIMPLE_NAME = MethodHandles.lookup().lookupClass().getSimpleName();
+    static final Logger LOGGER = LogManager.getLogger(SIMPLE_NAME);
     
     /**
      * 

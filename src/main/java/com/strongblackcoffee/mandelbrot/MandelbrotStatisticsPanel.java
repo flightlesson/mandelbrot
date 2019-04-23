@@ -1,6 +1,5 @@
 package com.strongblackcoffee.mandelbrot;
 
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.invoke.MethodHandles;
@@ -18,7 +17,8 @@ import org.apache.logging.log4j.Logger;
  *
  */
 public class MandelbrotStatisticsPanel extends JPanel {
-    static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
+    static final String SIMPLE_NAME = MethodHandles.lookup().lookupClass().getSimpleName();
+    static final Logger LOGGER = LogManager.getLogger(SIMPLE_NAME);
     
     public interface Callback {
         public void maxIterationsChanged(int newMaxIterations);

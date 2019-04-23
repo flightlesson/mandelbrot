@@ -27,7 +27,8 @@ import org.apache.logging.log4j.Logger;
  */
 class MandelbrotPane extends JPanel implements ComponentListener, MouseListener, 
         MouseMotionListener, MandelbrotStatisticsPanel.Callback {
-    static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
+    static final String SIMPLE_NAME = MethodHandles.lookup().lookupClass().getSimpleName();
+    static final Logger LOGGER = LogManager.getLogger(SIMPLE_NAME);
     
     MandelbrotPane(ColorProvider colorMap, Complex center, double delta, int maxDepth, double zoomFactor) {
         LOGGER.info("MandelbrotPane constructor");

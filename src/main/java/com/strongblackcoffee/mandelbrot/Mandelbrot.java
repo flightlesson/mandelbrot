@@ -34,7 +34,8 @@ import org.apache.logging.log4j.Logger;
  * The application frame and menus.
  */
 public class Mandelbrot extends JFrame {
-    static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
+    static final String SIMPLE_NAME = MethodHandles.lookup().lookupClass().getSimpleName();
+    static final Logger LOGGER = LogManager.getLogger(SIMPLE_NAME);
     
     static private final String USAGE = "$app [options[]";
     static private final String HEADER = "Mandelbrot and Julia set viewer.\nOptions are:";

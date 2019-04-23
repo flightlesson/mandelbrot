@@ -1,8 +1,6 @@
 package com.strongblackcoffee.mandelbrot;
 
-import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.lang.invoke.MethodHandles;
 import org.apache.commons.cli.CommandLine;
@@ -37,7 +35,8 @@ import org.apache.logging.log4j.Logger;
  * 
  */
 public class MandelbrotSet {
-    static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
+    static final String SIMPLE_NAME = MethodHandles.lookup().lookupClass().getSimpleName();
+    static final Logger LOGGER = LogManager.getLogger(SIMPLE_NAME);
     
     static private final String USAGE = "<app> [<options>] <n> <c> [<c> ...]";
     static private final String HEADER = "Tests each <c> to determine if it's still in the Mandelbrot set after <n> iterations.";

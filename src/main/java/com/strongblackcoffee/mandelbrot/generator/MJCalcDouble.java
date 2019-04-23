@@ -1,7 +1,6 @@
 package com.strongblackcoffee.mandelbrot.generator;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Arrays;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,8 +10,8 @@ import org.apache.logging.log4j.Logger;
  * Fast, but only about 14 digits of precision.
  */
 public class MJCalcDouble implements MJCalc, Runnable {
-    static final String thisSimpleName = MethodHandles.lookup().lookupClass().getSimpleName();
-    static final Logger LOGGER = LogManager.getLogger(thisSimpleName);
+    static final String SIMPLE_NAME = MethodHandles.lookup().lookupClass().getSimpleName();
+    static final Logger LOGGER = LogManager.getLogger(SIMPLE_NAME);
 
     /**
      *
@@ -73,7 +72,7 @@ public class MJCalcDouble implements MJCalc, Runnable {
             //LOGGER.info(thisSimpleName+": row="+row+" setting columns="+Arrays.toString(columns));
             this.callback.setColumns(this.row, columns);
         } catch (Exception ex) {
-            LOGGER.warn(thisSimpleName + ": row="+row+", width="+width+": "+ex.getLocalizedMessage());
+            LOGGER.warn(SIMPLE_NAME + ": row="+row+", width="+width+": "+ex.getLocalizedMessage());
         }
     }
     

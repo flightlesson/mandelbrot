@@ -8,7 +8,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -17,7 +16,6 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.math3.complex.Complex;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,8 +23,8 @@ import org.apache.logging.log4j.Logger;
  *
  */
 public class MJSet {
-    static final String thisSimpleName = MethodHandles.lookup().lookupClass().getSimpleName();
-    static final Logger LOGGER = LogManager.getLogger(thisSimpleName);
+    static final String SIMPLE_NAME = MethodHandles.lookup().lookupClass().getSimpleName();
+    static final Logger LOGGER = LogManager.getLogger(SIMPLE_NAME);
     
     /**
      * Constructor for generating a Mandelbrot set.
@@ -120,16 +118,16 @@ public class MJSet {
             this.points = new int[heightInPixels][];
         
             for (int row = 0; row < this.heightInPixels; ++row) {
-                LOGGER.debug(thisSimpleName+": scheduling calculation of row="+row);
+                LOGGER.debug(SIMPLE_NAME+": scheduling calculation of row="+row);
                 pool.execute(pointFactory.getCalc(row));
             }
         }
-        LOGGER.info(thisSimpleName+": waiting for pool to complete");
+        LOGGER.info(SIMPLE_NAME+": waiting for pool to complete");
         pool.shutdown();
         try {
             pool.awaitTermination(2, TimeUnit.HOURS);
         } catch (InterruptedException ex) {
-            LOGGER.warn(thisSimpleName+": generate: " + ex.getLocalizedMessage());
+            LOGGER.warn(SIMPLE_NAME+": generate: " + ex.getLocalizedMessage());
         }
     }
     

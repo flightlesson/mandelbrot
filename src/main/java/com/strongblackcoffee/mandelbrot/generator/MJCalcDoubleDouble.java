@@ -2,7 +2,6 @@ package com.strongblackcoffee.mandelbrot.generator;
 
 import com.hellblazer.utils.math.DoubleDouble;
 import java.lang.invoke.MethodHandles;
-import java.util.Arrays;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,8 +10,8 @@ import org.apache.logging.log4j.Logger;
  * 30 digits precision.
  */
 public class MJCalcDoubleDouble implements MJCalc, Runnable {
-    static final String thisSimpleName = MethodHandles.lookup().lookupClass().getSimpleName();
-    static final Logger LOGGER = LogManager.getLogger(thisSimpleName);
+    static final String SIMPLE_NAME = MethodHandles.lookup().lookupClass().getSimpleName();
+    static final Logger LOGGER = LogManager.getLogger(SIMPLE_NAME);
     
     static final DoubleDouble DOUBLEDOUBLE_2 = new DoubleDouble(2);
 
@@ -30,7 +29,7 @@ public class MJCalcDoubleDouble implements MJCalc, Runnable {
                         DoubleDouble z0_real, DoubleDouble z0_imag, 
                         DoubleDouble c_real, DoubleDouble c_imag,
                         double delta, int maxIterations, MJCalc.Callback callback) {
-        LOGGER.info(thisSimpleName+"(width="+width+",row="+row+",z0_0_real="+z0_real+",z0_imag="+z0_imag
+        LOGGER.info(SIMPLE_NAME+"(width="+width+",row="+row+",z0_0_real="+z0_real+",z0_imag="+z0_imag
                 +",delta="+delta+",maxIterations="+maxIterations+",callback)");
         this.width = width;
         this.row = row;
@@ -84,7 +83,7 @@ public class MJCalcDoubleDouble implements MJCalc, Runnable {
             //LOGGER.info(thisSimpleName+": row="+row+" setting columns="+Arrays.toString(columns));
             this.callback.setColumns(this.row, columns);
         } catch (Exception ex) {
-            LOGGER.warn(thisSimpleName + ": row="+row+", width="+width+": "+ex.getLocalizedMessage());
+            LOGGER.warn(SIMPLE_NAME + ": row="+row+", width="+width+": "+ex.getLocalizedMessage());
         }
     }
     
