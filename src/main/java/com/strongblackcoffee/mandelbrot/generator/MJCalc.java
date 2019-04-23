@@ -22,7 +22,20 @@ package com.strongblackcoffee.mandelbrot.generator;
  * </pre>
  */
 public interface MJCalc extends Runnable {
+    
+    /**
+     * Provides the setColumns() method that the MJCalc implementation uses to 
+     * communicate results back to the application.
+     */
     public interface Callback {
+        
+        /**
+         * The MJCalc implementation's run() method calls this to communicate its results
+         * back to the application.
+         * @param row     identifies which row these results are for
+         * @param columns one int for each pixel in the row; 0 means the pixel is in the set,
+         *                otherwise the number of iterations before the pixel left the set.
+         */
         public void setColumns(int row, int[] columns);
     }
     
