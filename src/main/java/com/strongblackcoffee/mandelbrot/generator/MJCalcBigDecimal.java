@@ -8,8 +8,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * {@link MJCalc} implementation that uses doubles.  
- * Fast, but only about 14 digits of precision.
+ * {@link MJCalc} implementation that uses BigDecimal to
+ * provide unlimited precision.
  */
 public class MJCalcBigDecimal implements MJCalc, Runnable {
     static final String thisSimpleName = MethodHandles.lookup().lookupClass().getSimpleName();
