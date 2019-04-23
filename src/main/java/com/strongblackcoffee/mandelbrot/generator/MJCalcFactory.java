@@ -8,10 +8,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * The idea is that there can be several implementations if {@link MjCalc}; 
+ * The idea is that there can be several implementations of {@link MjCalc}; 
  * the {@link #getCalc(int) getCalc} method returns the most appropriate of these.
  * 
- * <p>For example, if delta is smaller that 10^-14 then an implementation that 
+ * <p>For example, if delta is smaller than 10^-14 then an implementation that 
  * uses doubles won't have enough precision.  But when delta is larger, a higher
  * precision implementation might run too slowly.
  */
