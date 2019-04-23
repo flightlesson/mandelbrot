@@ -1,15 +1,15 @@
 package com.strongblackcoffee.mandelbrot.generator;
 
 /**
- * Contract for implementations that compute rows in Mandelbrot or Julia sets
- * using <tt>Z[i+1] = Z[i] + C</tt> where Z[0] is the set coordinates of the 
- * pixel and C is a constant.  The differenence between the Mandelbrot set and 
- * a Julia set is the C is Z[0] for the Mandelbrot set (i.e., each point's C is different)
- * but C is some constant for a Julia set (each Julia set has a differnent C).
+ * Contract for implementations that compute rows in Mandelbrot or Julia sets using
+ * <tt>Z[i+1] = Z[i] + C</tt> where Z[0] is the set coordinates of the pixel and C
+ * is a constant.  The difference between the Mandelbrot set and a Julia set is that 
+ * C is Z[0] for the Mandelbrot set (i.e., each point's C is different) but C is 
+ * some constant for a Julia set (each Julia set has a differnent C).
  *
- * Each instance 
+ * <p>Each instance computes one row in the set.
  *
- * The implementation's constructor should be similar to
+ * <p>The implementation's constructor should be similar to
  * <pre>
  * class MJCalcExtendedDouble implements MJCalc {
  *   MJCalcExtendedDouble(int width, // number of pixels in the row
@@ -27,9 +27,10 @@ public interface MJCalc extends Runnable {
     }
     
     /**
-     * The implementation's constructor described the row that this will compute;
-     * This will call MJCalc.Callback's setColumns() method to communicate the results 
-     * back to the calling application.
+     * The instance (presumably via its constructor) contains a description of
+     * the row to be computed.  The run() method computes that row and uses
+     * MJCalc.Callback's setColumns() method to communicate the results back to
+     * the calling application.
      */
     public void run();
 }
