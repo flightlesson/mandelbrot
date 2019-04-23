@@ -2,6 +2,7 @@ package com.strongblackcoffee.mandelbrot.generator;
 
 import com.hellblazer.utils.math.DoubleDouble;
 import java.lang.invoke.MethodHandles;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,7 +15,7 @@ public class MJCalcBigDecimal implements MJCalc, Runnable {
     static final String thisSimpleName = MethodHandles.lookup().lookupClass().getSimpleName();
     static final Logger LOGGER = LogManager.getLogger(thisSimpleName);
     
-    static final DoubleDouble DOUBLEDOUBLE_2 = new DoubleDouble(2);
+    static final BigDecimal BIGDECIMAL_2 = new BigDecimal(2);
 
     /**
      *
@@ -27,8 +28,8 @@ public class MJCalcBigDecimal implements MJCalc, Runnable {
      * @param callback
      */
     public MJCalcBigDecimal(int width, int row, 
-                        DoubleDouble z0_real, DoubleDouble z0_imag, 
-                        DoubleDouble c_real, DoubleDouble c_imag,
+                        BigDecimal z0_real, BigDecimal z0_imag, 
+                        BigDecimal c_real, BigDecimal c_imag,
                         double delta, int maxIterations, MJCalc.Callback callback) {
         LOGGER.info(thisSimpleName+"(width="+width+",row="+row+",z0_0_real="+z0_real+",z0_imag="+z0_imag
                 +",delta="+delta+",maxIterations="+maxIterations+",callback)");
@@ -45,17 +46,16 @@ public class MJCalcBigDecimal implements MJCalc, Runnable {
     
     private final int width;
     private final int row;
-    private final DoubleDouble z0_real;
-    private final DoubleDouble z0_imag;
-    private final DoubleDouble c0_real;
-    private final DoubleDouble c0_imag;
+    private final BigDecimal z0_real;
+    private final BigDecimal z0_imag;
+    private final BigDecimal c0_real;
+    private final BigDecimal c0_imag;
     private final double delta;
     private final int maxIterations;
     private final MJCalc.Callback callback;
     
-    static double distanceFrom0Squared(DoubleDouble real, DoubleDouble imag) {
-        //return c.getReal() * c.getReal() + c.getImaginary() * c.getImaginary();
-        return real.sqr().add(imag.sqr()).doubleValue();
+    static double distanceFrom0Squared(BigDecimal real, BigDecimal imag) {
+        return real.pow(2).add(imag.pow(2)).doubleValue();
     }
 
     @Override
@@ -65,13 +65,13 @@ public class MJCalcBigDecimal implements MJCalc, Runnable {
             int[] columns = new int[this.width];
             for (int col=0; col < this.width; ++col) {
                 columns[col] = 0;
-                DoubleDouble z_real = z0_real.add(new DoubleDouble(col * delta));
-                DoubleDouble z_imag = z0_imag;
-                DoubleDouble c_real = c0_real==null ? z_real : c0_real;
-                DoubleDouble c_imag = c0_real==null ? z_imag : c0_imag;
+                BigDecimal z_real = z0_real.add(BigDecimal.valueOf(col * delta));
+                BigDecimal z_imag = z0_imag;
+                BigDecimal c_real = c0_real==null ? z_real : c0_real;
+                BigDecimal c_imag = c0_real==null ? z_imag : c0_imag;
                 for (int i = 0; i < maxIterations; ++i) {
-                    DoubleDouble t = z_real.sqr().subtract(z_imag.sqr()).add(c_real);
-                    z_imag = z_real.multiply(DOUBLEDOUBLE_2).multiply(z_imag).add(c_imag);
+                    BigDecimal t = z_real.pow(2).subtract(z_imag.pow(2)).add(c_real);
+                    z_imag = z_real.multiply(BIGDECIMAL_2).multiply(z_imag).add(c_imag);
                     z_real = t;
                     
                     //LOGGER.debug(thisSimpleName+": row="+row+", col="+col+", i="+i+", z[i+1]="+z+", |z|^2="+distanceFrom0Squared(z));
