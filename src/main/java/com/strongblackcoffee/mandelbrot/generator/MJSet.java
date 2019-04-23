@@ -1,5 +1,7 @@
 package com.strongblackcoffee.mandelbrot.generator;
 
+import com.strongblackcoffee.mandelbrot.ColorProvider;
+import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,6 +17,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.math3.complex.Complex;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,8 +28,23 @@ public class MJSet {
     static final String thisSimpleName = MethodHandles.lookup().lookupClass().getSimpleName();
     static final Logger LOGGER = LogManager.getLogger(thisSimpleName);
     
+    /**
+     * Constructor for generating a Mandelbrot set.
+     */
     public MJSet(int widthInPixels, int heightInPixels, 
                  BigDecimal centerX, BigDecimal centerY, 
+                 double delta, int maxIterations) {
+        this(widthInPixels, heightInPixels, centerX, centerY, null, null, delta, maxIterations);
+    }
+    
+
+    /**
+     * Constructor for generating a Mandelbrot or Julia set.
+     * Set cX and cY null to generate a Mandelbrot set.
+     */
+    public MJSet(int widthInPixels, int heightInPixels, 
+                 BigDecimal centerX, BigDecimal centerY,
+                 BigDecimal cX, BigDecimal cY,
                  double delta, int maxIterations) {
         LOGGER.debug("MJSet(widthInPixels="+widthInPixels+", heightInPixels="+heightInPixels
             + ", centerX="+centerX+", centerY="+centerY
@@ -35,10 +53,12 @@ public class MJSet {
         this.heightInPixels = heightInPixels;
         this.centerX = centerX;
         this.centerY = centerY;
+        this.cX = cX;
+        this.cY = cY;
         this.delta = delta;
         this.maxIterations = maxIterations;
         
-        this.pointFactory = new MJCalcFactory(centerX, centerY, delta, widthInPixels, heightInPixels, maxIterations, new MJCalc.Callback() {
+        this.pointFactory = new MJCalcFactory(centerX, centerY, cX, cY, delta, widthInPixels, heightInPixels, maxIterations, new MJCalc.Callback() {
             @Override public void setColumns(int row, int[] columns) {
                 MJSet.this.setColumns(row, columns);
             }
@@ -49,6 +69,8 @@ public class MJSet {
     private final int heightInPixels;
     private final BigDecimal centerX;
     private final BigDecimal centerY;
+    private final BigDecimal cX;
+    private final BigDecimal cY;
     private final double delta;
     private final int maxIterations;
     private final MJCalcFactory pointFactory;
@@ -84,7 +106,7 @@ public class MJSet {
     }
     
     synchronized public void setColumns(int row, int[] columns) {
-        LOGGER.debug(thisSimpleName+": setColumns row="+row+", columns="+Arrays.toString(columns));
+        //LOGGER.debug(thisSimpleName+": setColumns row="+row+", columns="+Arrays.toString(columns));
         points[row] = columns;
     }
     
@@ -107,7 +129,7 @@ public class MJSet {
         try {
             pool.awaitTermination(2, TimeUnit.HOURS);
         } catch (InterruptedException ex) {
-            LOGGER.info(thisSimpleName+": generate: " + ex.getLocalizedMessage());
+            LOGGER.warn(thisSimpleName+": generate: " + ex.getLocalizedMessage());
         }
     }
     
@@ -146,6 +168,19 @@ public class MJSet {
         } catch (IOException ex) {
             return ex.getLocalizedMessage();
         }
+    }
+    
+    public BufferedImage asBufferedImage(ColorProvider colorProvider) {
+        BufferedImage img = new BufferedImage(this.widthInPixels,this.heightInPixels,BufferedImage.TYPE_INT_RGB);
+
+        for (int x = 0; x < widthInPixels; ++x) {
+            for (int y = 0; y < heightInPixels; ++y) {
+                int color = colorProvider.getColor(this.points[y][x],this.maxIterations);
+                img.setRGB(x,y,color);
+            }
+        }
+        
+        return img;
     }
     
     //
@@ -188,7 +223,7 @@ public class MJSet {
             } else {
                 mjSet = new MJSet(width,height,centerX,centerY,delta,maxIterations);
             }
-            LOGGER.info("Generating ("+nthreads+" threads) ..." );
+            LOGGER.info("Generating ("+nthreads+" threads, "+ Runtime.getRuntime().availableProcessors() + " cores) ..." );
             ExecutorService pool = Executors.newFixedThreadPool(nthreads);
             mjSet.generate(pool);
             LOGGER.info("... generation complete.");

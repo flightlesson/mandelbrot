@@ -1,5 +1,6 @@
 package com.strongblackcoffee.mandelbrot;
 
+import com.strongblackcoffee.mandelbrot.generator.MJSet;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -10,6 +11,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.lang.invoke.MethodHandles;
+import java.math.BigDecimal;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.swing.JPanel;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.logging.log4j.LogManager;
@@ -27,6 +31,7 @@ class MandelbrotPane extends JPanel implements ComponentListener, MouseListener,
     
     MandelbrotPane(ColorProvider colorMap, Complex center, double delta, int maxDepth, double zoomFactor) {
         LOGGER.info("MandelbrotPane constructor");
+        this.colorProvider = colorMap;
         this.resetToCenter = center;
         this.resetToDelta = delta;
         this.resetToMaxDepth = maxDepth;
@@ -37,13 +42,14 @@ class MandelbrotPane extends JPanel implements ComponentListener, MouseListener,
         this.addMouseMotionListener(this);
         
         this.setMinimumSize(new Dimension(600,600));
-        mandelbrotSet = new MandelbrotSet(colorMap, statisticsPanel);
+        //mandelbrotSet = new MandelbrotSet(colorMap, statisticsPanel);
         //img = image.updateImg(this.getWidth(), this.getHeight()); 
         this.setVisible(true);
         reset();
         LOGGER.info("MandelbrotPane constructor completed");
     }
 
+    private ColorProvider colorProvider;
     private Complex resetToCenter;
     private double resetToDelta;
     private int resetToMaxDepth;
@@ -51,6 +57,8 @@ class MandelbrotPane extends JPanel implements ComponentListener, MouseListener,
     private final MandelbrotStatisticsPanel statisticsPanel;
     private MandelbrotSet mandelbrotSet;
     private BufferedImage img;
+            
+    
     int maxIterations;
     Complex centerOfWindow = null;
     double delta;
@@ -189,8 +197,14 @@ class MandelbrotPane extends JPanel implements ComponentListener, MouseListener,
         //if (img == null) 
         LOGGER.info("recomputing image ...");
         long startedAt = System.nanoTime();
-        //img = mandelbrotSet.asBufferedImage(this.getWidth(),this.getHeight(), clipTopLeft, clipBottomRight, maxIterations);
-        img = mandelbrotSet.asBufferedImage(this.getWidth(),this.getHeight(), this.centerOfWindow, this.delta, this.maxIterations);
+        
+        MJSet mjset = new MJSet(this.getWidth(), this.getHeight(),
+                                BigDecimal.valueOf(this.centerOfWindow.getReal()), BigDecimal.valueOf(this.centerOfWindow.getImaginary()),
+                                this.delta, this.maxIterations);
+        ExecutorService pool = Executors.newFixedThreadPool(4);
+        mjset.generate(pool);
+        img = mjset.asBufferedImage(colorProvider);
+        //img = mandelbrotSet.asBufferedImage(this.getWidth(),this.getHeight(), this.centerOfWindow, this.delta, this.maxIterations);
         double duration = (System.nanoTime() - startedAt) / 1000000;
         LOGGER.info("... done, took " + duration + "ms");
         return img;

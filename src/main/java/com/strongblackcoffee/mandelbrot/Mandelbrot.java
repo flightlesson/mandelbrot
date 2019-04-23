@@ -72,7 +72,7 @@ public class Mandelbrot extends JFrame {
                 }
             }
             
-            double zoomFactor = 0.8;
+            double zoomFactor = 0.8; // 0.99;
             if (cmdline.hasOption("zoom-factor")) {
                 try {
                     zoomFactor = Double.parseDouble(cmdline.getOptionValue("zoom-factor"));
