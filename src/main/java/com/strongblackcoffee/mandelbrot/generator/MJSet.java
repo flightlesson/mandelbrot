@@ -113,7 +113,7 @@ public class MJSet {
                 pool.execute(pointFactory.getCalc(row));
             }
         }
-        LOGGER.info(SIMPLE_NAME+": waiting for pool to complete");
+        LOGGER.debug(SIMPLE_NAME+": waiting for pool to complete");
         pool.shutdown();
         try {
             pool.awaitTermination(2, TimeUnit.HOURS);
