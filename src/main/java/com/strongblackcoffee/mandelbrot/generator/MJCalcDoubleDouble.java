@@ -29,8 +29,8 @@ public class MJCalcDoubleDouble implements MJCalc, Runnable {
                         DoubleDouble z0_real, DoubleDouble z0_imag, 
                         DoubleDouble c_real, DoubleDouble c_imag,
                         double delta, int maxIterations, MJCalc.Callback callback) {
-        LOGGER.info(SIMPLE_NAME+"(width="+width+",row="+row+",z0_0_real="+z0_real+",z0_imag="+z0_imag
-                +",delta="+delta+",maxIterations="+maxIterations+",callback)");
+        //LOGGER.info(SIMPLE_NAME+"(width="+width+",row="+row+",z0_0_real="+z0_real+",z0_imag="+z0_imag
+        //        +",delta="+delta+",maxIterations="+maxIterations+",callback)");
         this.width = width;
         this.row = row;
         this.z0_real = z0_real;
