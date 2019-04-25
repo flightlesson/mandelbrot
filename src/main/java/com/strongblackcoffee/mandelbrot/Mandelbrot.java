@@ -51,8 +51,7 @@ public class Mandelbrot extends JFrame {
         OPTIONS = new Options();
         OPTIONS.addOption("h","help",false,"Print this message.");
         OPTIONS.addOption("c","center",true,"Initial center point. [(-0.2,0)]");
-        OPTIONS.addOption("z","zoom-factor",true,"Initial zoom factor. [1.2]");
-        OPTIONS.addOption("m","movie-mode",true,"Movie mode, specifies the number of frames to create. [1]");
+        OPTIONS.addOption("z","zoom-factor",true,"Initial zoom factor. [0.8]");
         
         // Add application specific options here.
     }
@@ -85,10 +84,6 @@ public class Mandelbrot extends JFrame {
                 }
             }
             
-            if (cmdline.hasOption("movie-mode")) {
-                
-            }
-            
             
         
             Mandelbrot application = new Mandelbrot(center, zoomFactor);
@@ -109,7 +104,7 @@ public class Mandelbrot extends JFrame {
         //this.statisticsPane = new MandelbrotStatisticsPanel();
         //this.mandelbrotPane = new MandelbrotPane((ColorProvider)colorEditor, this.statisticsPane);
         // } IS {
-        this.mandelbrotPane = new MandelbrotPane((ColorProvider) colorEditor, center, 0.009, 100, zoomFactor);
+        this.mandelbrotPane = new MandelbrotPane((ColorProvider) colorEditor, center, 0.004, 100, zoomFactor);
         this.statisticsPane = this.mandelbrotPane.getStatisticsPane();
         // }
         LOGGER.info("got mandelbrotPane");
@@ -172,7 +167,7 @@ public class Mandelbrot extends JFrame {
         menuItem.setAccelerator(KeyStroke.getKeyStroke('Z',InputEvent.CTRL_DOWN_MASK));
         menuItem.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
-                LOGGER.info("Zoom in");
+                //LOGGER.info("Zoom in");
                 mandelbrotPane.zoomIn();
             }
         });
@@ -182,7 +177,7 @@ public class Mandelbrot extends JFrame {
         menuItem.setAccelerator(KeyStroke.getKeyStroke('Z',InputEvent.SHIFT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK));
         menuItem.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
-                LOGGER.info("Zoom out");
+                //LOGGER.info("Zoom out");
                 mandelbrotPane.zoomOut();
             }
         });
