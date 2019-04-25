@@ -75,7 +75,7 @@ public class MandelbrotStatisticsPanel extends JPanel {
     }
     
     public void setDelta(double delta) {
-        this.deltaField.setText(String.format("%16.14f",delta));
+        this.deltaField.setText(String.format("%g",delta));
     }
     
 }
