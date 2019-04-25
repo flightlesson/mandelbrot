@@ -69,9 +69,9 @@ public class MandelbrotStatisticsPanel extends JPanel {
         this.maxIterField.setText(String.valueOf(maxIterations));
     }
     
-    public void setCenter(Complex point) {
-        this.centerXField.setText(String.format("%16.14f", point.getReal()));
-        this.centerYField.setText(String.format("%16.14f", point.getImaginary()));
+    public void setCenter(BigComplex point) {
+        this.centerXField.setText(point.real.toString());
+        this.centerYField.setText(point.imag.toString());
     }
     
     public void setDelta(double delta) {

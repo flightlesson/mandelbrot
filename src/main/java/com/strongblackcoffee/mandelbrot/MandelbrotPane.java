@@ -30,7 +30,7 @@ class MandelbrotPane extends JPanel implements ComponentListener, MouseListener,
     static final String SIMPLE_NAME = MethodHandles.lookup().lookupClass().getSimpleName();
     static final Logger LOGGER = LogManager.getLogger(SIMPLE_NAME);
     
-    MandelbrotPane(ColorProvider colorMap, Complex center, double delta, int maxDepth, double zoomFactor) {
+    MandelbrotPane(ColorProvider colorMap, BigComplex center, double delta, int maxDepth, double zoomFactor) {
         LOGGER.info("MandelbrotPane constructor");
         this.colorProvider = colorMap;
         this.resetToCenter = center;
@@ -51,7 +51,7 @@ class MandelbrotPane extends JPanel implements ComponentListener, MouseListener,
     }
 
     private ColorProvider colorProvider;
-    private Complex resetToCenter;
+    private BigComplex resetToCenter;
     private double resetToDelta;
     private int resetToMaxDepth;
     private double resetToZoomFactor;    
@@ -61,7 +61,7 @@ class MandelbrotPane extends JPanel implements ComponentListener, MouseListener,
             
     
     int maxIterations;
-    Complex centerOfWindow = null;
+    BigComplex centerOfWindow = null;
     double delta;
     double zoomFactor;
     
@@ -90,7 +90,7 @@ class MandelbrotPane extends JPanel implements ComponentListener, MouseListener,
         }
     }
     
-    public void setCenterOfWindow(Complex center, boolean repaint) {
+    public void setCenterOfWindow(BigComplex center, boolean repaint) {
         this.centerOfWindow = center;
         this.statisticsPanel.setCenter(center);
         if (repaint) {
@@ -172,7 +172,7 @@ class MandelbrotPane extends JPanel implements ComponentListener, MouseListener,
     /**
      * Returns the window (i.e., the Mandelbrot set point) coordinates corresponding to a pixel in the view.
      */
-    Complex getWindowCoordinates(Point p) {
+    BigComplex getWindowCoordinates(Point p) {
         
 //        this.getX();
 //        this.getY();
@@ -188,9 +188,9 @@ class MandelbrotPane extends JPanel implements ComponentListener, MouseListener,
         LOGGER.info("getWindowCoordinates: view's X is ["+this.getX()+","+(this.getX()+getWidth()-1)+"], p.x="+p.x);
         int viewCenterX = getWidth()/2;
         int viewCenterXMovedBy = p.x - viewCenterX;
-        double windowCenterX = this.centerOfWindow.getReal() + viewCenterXMovedBy * delta;
-        double windowCenterY = this.centerOfWindow.getImaginary() + (p.y - getHeight()/2) * delta;
-        return new Complex(windowCenterX,windowCenterY);
+        BigDecimal windowCenterX = this.centerOfWindow.real.add(BigDecimal.valueOf(viewCenterXMovedBy * delta));
+        BigDecimal windowCenterY = this.centerOfWindow.imag.add(BigDecimal.valueOf((p.y - getHeight()/2) * delta));
+        return new BigComplex(windowCenterX,windowCenterY);
         
     }
     
@@ -200,8 +200,7 @@ class MandelbrotPane extends JPanel implements ComponentListener, MouseListener,
         long startedAt = System.nanoTime();
         
         MJSet mjset = new MJSet(this.getWidth(), this.getHeight(),
-                                BigDecimal.valueOf(this.centerOfWindow.getReal()), BigDecimal.valueOf(this.centerOfWindow.getImaginary()),
-                                this.delta, this.maxIterations);
+                                this.centerOfWindow, null, this.delta, this.maxIterations);
         ExecutorService pool = Executors.newFixedThreadPool(4);
         mjset.generate(pool);
         img = mjset.asBufferedImage(colorProvider);

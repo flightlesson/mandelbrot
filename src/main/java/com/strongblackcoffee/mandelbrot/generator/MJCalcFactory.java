@@ -1,6 +1,7 @@
 package com.strongblackcoffee.mandelbrot.generator;
 
 import com.hellblazer.utils.math.DoubleDouble;
+import com.strongblackcoffee.mandelbrot.BigComplex;
 import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
 import org.apache.commons.math3.complex.Complex;
@@ -31,12 +32,10 @@ public class MJCalcFactory {
      * @param maxIterations
      * @param callback 
      */
-    MJCalcFactory(BigDecimal centerX, BigDecimal centerY, BigDecimal cX, BigDecimal cY,
-                  double delta, int width, int height, int maxIterations, MJCalc.Callback callback) {
-        this.centerX = centerX;
-        this.centerY = centerY;
-        this.cX = cX;
-        this.cY = cY;
+    MJCalcFactory(BigComplex center, BigComplex c, double delta, int width, int height, 
+                  int maxIterations, MJCalc.Callback callback) {
+        this.center = center;
+        this.c = c;
         this.delta = delta;
         this.width = width;
         this.height = height;
@@ -44,10 +43,8 @@ public class MJCalcFactory {
         this.callback = callback;
     }
     
-    private final BigDecimal centerX;
-    private final BigDecimal centerY;
-    private final BigDecimal cX;
-    private final BigDecimal cY;
+    private final BigComplex center;
+    private final BigComplex c;
     private final double delta;
     private final int width;
     private final int height;
@@ -59,30 +56,27 @@ public class MJCalcFactory {
      */
     public MJCalc getCalc(int row) {
         if (delta > 1.0e-12) {
-            double topLeftX = centerX.doubleValue() - width/2 * delta;
-            double topLeftY = centerY.doubleValue() - height/2 * delta;
+            double topLeftX = center.real.doubleValue() - width/2 * delta;
+            double topLeftY = center.imag.doubleValue() - height/2 * delta;
             Complex c = null;
-            if (cX != null && cY != null) {
-                c = new Complex(cX.doubleValue(), cY.doubleValue());
+            if (this.c != null) {
+                c = new Complex(this.c.real.doubleValue(), this.c.imag.doubleValue());
             }
-            return new MJCalcDouble(width, row, 
-                    topLeftX, topLeftY + row * delta, 
-                    c,
-                    delta, maxIterations, callback);
+            return new MJCalcDouble(width, row, topLeftX, topLeftY + row * delta, 
+                    c, delta, maxIterations, callback);
         } else if (delta > 1.0e-26) {
-            DoubleDouble z0X = DoubleDouble.valueOf(centerX.toString()).subtract(new DoubleDouble(width/2 * delta));
-            DoubleDouble z0Y = DoubleDouble.valueOf(centerY.toString()).subtract(new DoubleDouble(height/2 * delta));
+            DoubleDouble z0X = DoubleDouble.valueOf(center.real.toString()).subtract(new DoubleDouble(width/2 * delta));
+            DoubleDouble z0Y = DoubleDouble.valueOf(center.imag.toString()).subtract(new DoubleDouble(height/2 * delta));
             DoubleDouble cX = null;
             DoubleDouble cY = null;
             
             return new MJCalcDoubleDouble(width, row, 
                     z0X, z0Y.add(new DoubleDouble(row * delta)), 
-                    cX, cY, 
-                    delta, maxIterations, callback);
+                    cX, cY, delta, maxIterations, callback);
         }
         
-        BigDecimal z0X = centerX.subtract(BigDecimal.valueOf(width/2 * delta));
-        BigDecimal z0Y = centerY.subtract(BigDecimal.valueOf(height/2 * delta));
+        BigDecimal z0X = center.real.subtract(BigDecimal.valueOf(width/2 * delta));
+        BigDecimal z0Y = center.imag.subtract(BigDecimal.valueOf(height/2 * delta));
         BigDecimal cX = null;
         BigDecimal cY = null;
             

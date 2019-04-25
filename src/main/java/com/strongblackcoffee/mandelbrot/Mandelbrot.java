@@ -8,6 +8,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import javax.swing.Box;
 import javax.swing.JEditorPane;
@@ -64,11 +65,13 @@ public class Mandelbrot extends JFrame {
                 System.exit(1);
             }
             
-            Complex center = new Complex(-0.2,0);
+            BigComplex center = new BigComplex(BigDecimal.valueOf(-0.2),BigDecimal.ZERO);
             if (cmdline.hasOption("center")) {
                 try {
-                    center = ComplexFormat.getInstance().parse(cmdline.getOptionValue("center"));
-                } catch (MathParseException ex) {
+                    //center = ComplexFormat.getInstance().parse(cmdline.getOptionValue("center"));
+                    String[] s = cmdline.getOptionValue("center").split(",");
+                    center = new BigComplex(new BigDecimal(s[0]),new BigDecimal(s[1]));
+                } catch (Exception ex) {
                     LOGGER.warn("-center " + cmdline.getOptionValue("center") + ": " + ex.getLocalizedMessage());
                 }
             }
@@ -96,7 +99,7 @@ public class Mandelbrot extends JFrame {
         }
     }
     
-    public Mandelbrot(Complex center, double zoomFactor) {
+    public Mandelbrot(BigComplex center, double zoomFactor) {
         super("Mandelbrot");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setJMenuBar(constructMenuBar());

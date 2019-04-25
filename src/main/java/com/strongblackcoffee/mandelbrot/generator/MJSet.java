@@ -1,5 +1,6 @@
 package com.strongblackcoffee.mandelbrot.generator;
 
+import com.strongblackcoffee.mandelbrot.BigComplex;
 import com.strongblackcoffee.mandelbrot.ColorProvider;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
@@ -29,10 +30,9 @@ public class MJSet {
     /**
      * Constructor for generating a Mandelbrot set.
      */
-    public MJSet(int widthInPixels, int heightInPixels, 
-                 BigDecimal centerX, BigDecimal centerY, 
-                 double delta, int maxIterations) {
-        this(widthInPixels, heightInPixels, centerX, centerY, null, null, delta, maxIterations);
+    public MJSet(int widthInPixels, int heightInPixels,
+                 BigComplex center, double delta, int maxIterations) {
+        this(widthInPixels, heightInPixels, center, null, delta, maxIterations);
     }
     
 
@@ -41,22 +41,19 @@ public class MJSet {
      * Set cX and cY null to generate a Mandelbrot set.
      */
     public MJSet(int widthInPixels, int heightInPixels, 
-                 BigDecimal centerX, BigDecimal centerY,
-                 BigDecimal cX, BigDecimal cY,
+                 BigComplex center, BigComplex c,
                  double delta, int maxIterations) {
         LOGGER.debug("MJSet(widthInPixels="+widthInPixels+", heightInPixels="+heightInPixels
-            + ", centerX="+centerX+", centerY="+centerY
+            + ", center="+center+", c="+c
             + ", delta="+delta+", maxIterations="+maxIterations);
         this.widthInPixels = widthInPixels;
         this.heightInPixels = heightInPixels;
-        this.centerX = centerX;
-        this.centerY = centerY;
-        this.cX = cX;
-        this.cY = cY;
+        this.center = center;
+        this.c = c;
         this.delta = delta;
         this.maxIterations = maxIterations;
         
-        this.pointFactory = new MJCalcFactory(centerX, centerY, cX, cY, delta, widthInPixels, heightInPixels, maxIterations, new MJCalc.Callback() {
+        this.pointFactory = new MJCalcFactory(center, c, delta, widthInPixels, heightInPixels, maxIterations, new MJCalc.Callback() {
             @Override public void setColumns(int row, int[] columns) {
                 MJSet.this.setColumns(row, columns);
             }
@@ -65,10 +62,8 @@ public class MJSet {
     
     private final int widthInPixels;
     private final int heightInPixels;
-    private final BigDecimal centerX;
-    private final BigDecimal centerY;
-    private final BigDecimal cX;
-    private final BigDecimal cY;
+    private final BigComplex center;
+    private final BigComplex c;
     private final double delta;
     private final int maxIterations;
     private final MJCalcFactory pointFactory;
@@ -83,12 +78,8 @@ public class MJSet {
         return heightInPixels;
     }
     
-    public BigDecimal getCenterX() {
-        return centerX;
-    }
-    
-    public BigDecimal getCenterY() {
-        return centerY;
+    public BigComplex getCenter() {
+        return center;
     }
     
     public double getDelta() {
@@ -126,6 +117,9 @@ public class MJSet {
         pool.shutdown();
         try {
             pool.awaitTermination(2, TimeUnit.HOURS);
+            if (!pool.isTerminated()) {
+                LOGGER.error(SIMPLE_NAME+": pool timed out before terminating!");
+            }
         } catch (InterruptedException ex) {
             LOGGER.warn(SIMPLE_NAME+": generate: " + ex.getLocalizedMessage());
         }
@@ -134,8 +128,8 @@ public class MJSet {
     public void toXML(PrintWriter out) {
         out.print("<MJSet widthInPixels=\""+widthInPixels+"\""
                 +" heightInPixels=\""+heightInPixels+"\""
-                +" centerX=\""+centerX+"\""
-                +" centerY=\""+centerY+"\""
+                +" center=\""+center+"\""
+                +(c==null?"":" c=\""+c+"\"")
                 +" delta=\""+delta+"\""
                 +" maxIterations=\""+maxIterations+"\"");
         int[][] p = getPoints();
@@ -219,7 +213,7 @@ public class MJSet {
             if (cmdline.hasOption("julia")) {
                 mjSet = null; // FIXME
             } else {
-                mjSet = new MJSet(width,height,centerX,centerY,delta,maxIterations);
+                mjSet = new MJSet(width,height,new BigComplex(centerX,centerY),delta,maxIterations);
             }
             LOGGER.info("Generating ("+nthreads+" threads, "+ Runtime.getRuntime().availableProcessors() + " cores) ..." );
             ExecutorService pool = Executors.newFixedThreadPool(nthreads);

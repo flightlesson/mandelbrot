@@ -58,7 +58,7 @@ public class MJCalcBigDecimal implements MJCalc, Runnable {
 
     @Override
     public void run() {
-        //LOGGER.info(thisSimpleName + ": run() row="+row+", width="+width);
+        LOGGER.info(SIMPLE_NAME + ": run() row="+row+", width="+width);
         try {
             int[] columns = new int[this.width];
             for (int col=0; col < this.width; ++col) {
@@ -72,7 +72,7 @@ public class MJCalcBigDecimal implements MJCalc, Runnable {
                     z_imag = z_real.multiply(BIGDECIMAL_2).multiply(z_imag).add(c_imag);
                     z_real = t;
                     
-                    //LOGGER.debug(thisSimpleName+": row="+row+", col="+col+", i="+i+", z[i+1]="+z+", |z|^2="+distanceFrom0Squared(z));
+                    LOGGER.debug(SIMPLE_NAME+": row="+row+", col="+col+", i="+i+", z[i+1]="+z_real+"+"+z_imag+"i, |z|^2="+distanceFrom0Squared(z_real,z_imag));
                     if (distanceFrom0Squared(z_real,z_imag) > 4.0) {
                         columns[col] = i+1;
                         break;
