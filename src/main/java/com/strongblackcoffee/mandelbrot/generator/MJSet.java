@@ -21,7 +21,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
+ * Mandelbrot or Julia set generator.
+ * <pre>
+ * MJSet set = new MJSet(1920, 1080, new BigComplex(0.370816,0.091563), (BigComplex) null, 0.0001, 1000);
+ * set.generate(Executors.newFixedThreadPool(4));
+ * set.toXML(new PrintWriter(System.out));
+ * </pre>
  */
 public class MJSet {
     static final String SIMPLE_NAME = MethodHandles.lookup().lookupClass().getSimpleName();
