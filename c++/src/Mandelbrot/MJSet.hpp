@@ -4,17 +4,19 @@
 #include <iostream>
 #include <string>
 
+#include "ViewPort.hpp"
+
 namespace Mandelbrot {
     class MJSet {
     public:
-        MJSet(int,int,double,int);
+        MJSet(const ViewPort&,double,int);
+        const ViewPort& getViewPort() const;
     private:
-        int widthInPixels;
-        int heightInPixels;
+        const ViewPort& viewPort;
         double delta;
         int maxIterations;
     };
 }
 
-std::ostream& operator<<(std::ostream& strm, const Mandelbrot::MJSet &obj);
+std::ostream& operator<<(std::ostream& strm, const Mandelbrot::MJSet& obj);
 #endif

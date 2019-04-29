@@ -2,6 +2,7 @@
 #include <string>
 #include "boost/program_options.hpp"
 #include "MJSet.hpp"
+#include "ViewPort.hpp"
 
 int main(int argc, char **argv) {
     namespace po = boost::program_options;
@@ -27,7 +28,8 @@ int main(int argc, char **argv) {
         }
         std::cout << "threads: " << vm["threads"].as<int>() << std::endl;
 
-        Mandelbrot::MJSet mjset(2000,1000,1.2,234);
+        Mandelbrot::MJSet mjset(Mandelbrot::ViewPort(1920,1080),1.2,234);
+        std::cout << "after constructors" << std::endl;
         std::cout << "mjset: " << mjset << std::endl;
     } catch (po::error& e) {
         std::cerr << "ERROR: " << e.what() << std::endl;
