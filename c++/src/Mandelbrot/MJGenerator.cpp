@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "boost/program_options.hpp"
+#include "MJGenerator.hpp"
 #include "MJSet.hpp"
 #include "ViewPort.hpp"
 
@@ -28,9 +29,9 @@ int main(int argc, char **argv) {
         }
         std::cout << "threads: " << vm["threads"].as<int>() << std::endl;
 
-        Mandelbrot::MJSet mjset(Mandelbrot::ViewPort(1920,1080),1.2,234);
+        //Mandelbrot::MJGenerator generator(Mandelbrot::ViewPort(vm["viewport"]),vm["center"],vm["delta"],vm["maxIterations"]);
         std::cout << "after constructors" << std::endl;
-        std::cout << "mjset: " << mjset << std::endl;
+        //std::cout << "mjset: " << mjset << std::endl;
     } catch (po::error& e) {
         std::cerr << "ERROR: " << e.what() << std::endl;
     }

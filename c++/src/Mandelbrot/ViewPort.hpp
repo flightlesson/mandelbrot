@@ -1,9 +1,13 @@
-#ifndef __Mandelbrot_Point_hpp__
-#define __Mandelbrot_Point_hpp__
+#ifndef Mandelbrot_Point_hpp
+#define Mandelbrot_Point_hpp
 
 #include <iostream>
 
 namespace Mandelbrot {
+
+    /**
+     * Provides the size, in pixels, of the viewport.
+     */
     class ViewPort {
     public:
         ViewPort(int width,int height);

@@ -1,8 +1,18 @@
+project(Mandelbrot)
 cmake_minimum_required(VERSION 3.14)
 
-find_package(Boost 1.40 COMPONENTS program_options REQUIRED )
-INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} ../CTPL-master)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
-add_executable(MJGenerator MJGenerator.cpp MJSet.cpp ViewPort.cpp)
-target_link_libraries(MJGenerator ${Boost_PROGRAM_OPTIONS_LIBRARY})
+find_package(Boost 1.40 COMPONENTS program_options REQUIRED )
+include_directories( ${Boost_INCLUDE_DIR} ../CTPL-master)
+
+find_package(GMP)
+
+add_executable(MJGenerator MJGenerator.cpp MJSet.cpp Point.cpp ViewPort.cpp distanceFromSet.c)
+target_link_libraries(MJGenerator ${Boost_PROGRAM_OPTIONS_LIBRARY} ${GMP_LIBRARIES})
+
+
+
+
+
 

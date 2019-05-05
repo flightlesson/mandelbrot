@@ -1,5 +1,5 @@
-#ifndef __Mandelbrot_MJSet_hpp__
-#define __Mandelbrot_MJSet_hpp__
+#ifndef Mandelbrot_MJSet_hpp
+#define Mandelbrot_MJSet_hpp
 
 #include <iostream>
 #include <string>
