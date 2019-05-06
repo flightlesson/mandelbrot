@@ -1,6 +1,6 @@
-#include "distanceFromSet.h"
+#include "closenessToSet.h"
 
-int distanceFromSet(const mpf_t z0_real, const mpf_t z0_imag, const mpf_t c_real, const mpf_t c_imag, int maxIterations, mpf_t tmp[]) {
+int closenessToSet(const mpf_t z0_real, const mpf_t z0_imag, const mpf_t c_real, const mpf_t c_imag, int maxIterations, mpf_t tmp[]) {
   int i;
 
   mpf_set(tmp[0], z0_real); // z[0].real
@@ -23,12 +23,12 @@ int distanceFromSet(const mpf_t z0_real, const mpf_t z0_imag, const mpf_t c_real
   return 0; // z0 is in the set
 }
 
-int* distanceFromSetRow(int npoints, int results[], mpf_t delta,
+int* closenessToSetRow(int npoints, int results[], mpf_t delta,
 			mpf_t z0_0_real, mpf_t z0_imag, mpf_t c_real, mpf_t c_imag, int maxIterations, mpf_t tmp[]) {
   int i;
   mpf_set(tmp[5], z0_0_real);
   for (i=0; i < npoints; ++i) {
-    results[i] = distanceFromSet(tmp[5],z0_imag,c_real,c_imag,maxIterations,tmp);
+    results[i] = closenessToSet(tmp[5],z0_imag,c_real,c_imag,maxIterations,tmp);
     mpf_add(tmp[5],tmp[5],delta);
   }
   return results;

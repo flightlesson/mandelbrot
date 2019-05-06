@@ -8,7 +8,7 @@ include_directories( ${Boost_INCLUDE_DIR} ../CTPL-master)
 
 find_package(GMP)
 
-add_executable(MJGenerator MJGenerator.cpp MJSet.cpp Point.cpp ViewPort.cpp distanceFromSet.c)
+add_executable(MJGenerator MJGenerator.cpp MJSet.cpp Point.cpp ViewPort.cpp closenessToSet.c)
 target_link_libraries(MJGenerator ${Boost_PROGRAM_OPTIONS_LIBRARY} ${GMP_LIBRARIES})
 
 
