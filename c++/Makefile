@@ -12,7 +12,8 @@ INSTALL_ARTIFACTS=install-artifacts
 .PHONY: all
 all:
 	mkdir -p $(BUILD_ARTIFACTS)
-	cd $(BUILD_ARTIFACTS) && $(CMAKE) ../src/Mandelbrot && make
+	$(CMAKE) -S src/Mandelbrot -B $(BUILD_ARTIFACTS)
+	cd $(BUILD_ARTIFACTS) && make
 
 # Similarly, all install artifacts will be created under the $(INSTALL_ARTIFACTS) directory.
 #
