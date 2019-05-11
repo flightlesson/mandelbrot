@@ -10,10 +10,15 @@ INSTALL_ARTIFACTS=install-artifacts
 # then run make to build using those Makefiles.
 #
 .PHONY: all
-all:
+all: compile test
+
+compile:
 	mkdir -p $(BUILD_ARTIFACTS)
 	$(CMAKE) -S src/Mandelbrot -B $(BUILD_ARTIFACTS)
 	cd $(BUILD_ARTIFACTS) && make
+
+test: compile
+	$(BUILD_ARTIFACTS)/unit-tests/unit-test-suite
 
 # Similarly, all install artifacts will be created under the $(INSTALL_ARTIFACTS) directory.
 #
