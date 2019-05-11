@@ -27,8 +27,8 @@ extern "C" {
    * @param c_real, c_imag are the c in z[i+1] = z[i]^2 + c
    * @param maxIterations is self explanatory: if z[maxIterations-1]'s absolute value hasn't exceeded 2 
    *        then z[0] is presumed to be inside the set.
-   * @param tmp is an array of 5 mpfr_t that will be used to hold intermediate values. Each mpfr_t in 
-   *        tmp is presumed to have been configured via mpfr_init2().
+   * @param tmp is an array of 5 mpf_t that will be used to hold intermediate values. Each mpfr_t in 
+   *        tmp is presumed to have been configured via mpf_init2().
    */
   int closenessToSet(const mpf_t z0_real, const mpf_t z0_imag, const mpf_t c_real, const mpf_t c_imag, int maxIterations, mpf_t tmp[]);
 
@@ -42,6 +42,9 @@ extern "C" {
    * @param z0_0_real and z0_imag are the coordinates (in set space) of the leftmost point in the row.
    * @param c_real and c_imag are either null (Mandelbrot set) or the constant that defines the Julia set.
    * @param maxIterations
+   * @param tmp is an array of 8 mpf_t that will be used to hold intermediate values. Each mpfr_t is
+   *        tmp is presumed to have been configured via mpf_init2().  
+   *        Note that closenessToSet's tmp only has 5 entries.
    * 
    * @return results
    */

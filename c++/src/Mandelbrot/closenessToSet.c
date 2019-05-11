@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "closenessToSet.h"
 
 int closenessToSet(const mpf_t z0_real, const mpf_t z0_imag, const mpf_t c_real, const mpf_t c_imag, int maxIterations, mpf_t tmp[]) {
@@ -26,9 +27,19 @@ int closenessToSet(const mpf_t z0_real, const mpf_t z0_imag, const mpf_t c_real,
 int* closenessToSetRow(int npoints, int results[], mpf_t delta,
 			mpf_t z0_0_real, mpf_t z0_imag, mpf_t c_real, mpf_t c_imag, int maxIterations, mpf_t tmp[]) {
   int i;
+
   mpf_set(tmp[5], z0_0_real);
+  if (c_real != NULL) {
+    mpf_set(tmp[6],c_real);
+    mpf_set(tmp[7],c_imag);
+  } else {
+    mpf_set(tmp[7],z0_imag);
+  }
   for (i=0; i < npoints; ++i) {
-    results[i] = closenessToSet(tmp[5],z0_imag,c_real,c_imag,maxIterations,tmp);
+    if (c_real == NULL) {
+      mpf_set(tmp[6],tmp[5]);
+    }
+    results[i] = closenessToSet(tmp[5],z0_imag,tmp[6],tmp[7],maxIterations,tmp);
     mpf_add(tmp[5],tmp[5],delta);
   }
   return results;
