@@ -8,7 +8,7 @@ find_package(GMP)
 include_directories(${Boost_INCLUDE_DIR} ../)
 
 add_definitions(-DBOOST_TEST_DYN_LINK)
-add_executable(test1 testClosenessToSet.cpp "${CMAKE_SOURCE_DIR}/../closenessToSet.c" )
+add_executable(test1 testClosenessToSet.cpp ../closenessToSet.c )
 target_link_libraries(test1 ${Boost_LIBRARIES} ${GMP_LIBRARIES})
 
 enable_testing()
