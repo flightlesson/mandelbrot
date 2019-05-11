@@ -8,8 +8,9 @@ find_package(GMP)
 include_directories(${Boost_INCLUDE_DIR} ../)
 
 add_definitions(-DBOOST_TEST_DYN_LINK)
-add_executable(test1 testClosenessToSet.cpp ../closenessToSet.c )
-target_link_libraries(test1 ${Boost_LIBRARIES} ${GMP_LIBRARIES})
+add_executable(unit-test-suite testClosenessToSet.cpp ../closenessToSet.c )
+target_link_libraries(unit-test-suite ${Boost_LIBRARIES} ${GMP_LIBRARIES})
 
-enable_testing()
-add_test(UnitTest test1)
+# enable_testing()
+# add_test(UnitTest unit-test-suite)
+
