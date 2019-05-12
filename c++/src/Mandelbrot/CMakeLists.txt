@@ -29,7 +29,8 @@ target_link_libraries(MJGenerator
 add_subdirectory("unit-tests")
 
 enable_testing()
-add_test(NAME unit-test COMMAND unit-tests/unit-test-suite)
+add_test(NAME testClosenessToSet COMMAND unit-tests/testClosenessToSet)
+add_test(NAME testHpDouble          COMMAND unit-tests/testHpDouble)
 
 
 

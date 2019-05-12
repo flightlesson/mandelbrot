@@ -40,7 +40,7 @@ if (GMP_INCLUDE_DIR)
   endif()
 endif()
 set(GMP_VERSION "${GMP_VERSION_MAJOR}.${GMP_VERSION_MINOR}.${GMP_VERSION_PATCH}")
-message(STATUS "GNU MP VERSION ${GMP_VERSION}")
+message(STATUS "GMP version: ${GMP_VERSION}")
 
 find_library(GMP_LIB gmp
     PATHS ${PC_GMP_LIBRARY_DIRS}

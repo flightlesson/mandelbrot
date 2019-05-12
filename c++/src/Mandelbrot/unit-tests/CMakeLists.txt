@@ -8,9 +8,13 @@ find_package(GMP)
 include_directories(${Boost_INCLUDE_DIR} ../)
 
 add_definitions(-DBOOST_TEST_DYN_LINK)
-add_executable(unit-test-suite testClosenessToSet.cpp ../closenessToSet.c )
-target_link_libraries(unit-test-suite ${Boost_LIBRARIES} ${GMP_LIBRARIES})
+add_executable(testClosenessToSet testClosenessToSet.cpp ../closenessToSet.c )
+target_link_libraries(testClosenessToSet ${Boost_LIBRARIES} ${GMP_LIBRARIES}) 
+
+add_definitions(-DBOOST_TEST_DYN_LINK)
+add_executable(testHpDouble testHpDouble.cpp ../HpDouble.hpp ../HpDouble.cpp )
+target_link_libraries(testHpDouble ${Boost_LIBRARIES} ${GMP_LIBRARIES})
 
 # enable_testing()
-# add_test(UnitTest unit-test-suite)
+# add_test(UnitTest testClosenessToSet)
 
