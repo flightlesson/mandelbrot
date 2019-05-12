@@ -4,14 +4,23 @@ cmake_minimum_required(VERSION 3.14)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 find_package(Boost 1.40 COMPONENTS
-		   program_options
-		   unit_test_framework
-REQUIRED )
-include_directories( ${Boost_INCLUDE_DIR} ../CTPL-master)
+		   	program_options
+		   	unit_test_framework
+			REQUIRED )
 
 find_package(GMP)
 
-add_executable(MJGenerator MJGenerator.cpp MJSet.cpp Point.cpp ViewPort.cpp closenessToSet.c)
+include_directories( ${Boost_INCLUDE_DIR} ${GMP_INCLUDE_DIR} ../CTPL-master)
+
+add_executable(MJGenerator
+	closenessToSet.c closenessToSet.h
+	HpComplex.cpp   HpComplex.hpp
+	HpDouble.cpp      HpDouble.hpp
+	MJGenerator.cpp   MjGenerator.hpp
+ 	MJSet.cpp	     MjSet.hpp
+	Point.cpp              Point.hpp
+	ViewPort.cpp         ViewPort.hpp
+	)
 target_link_libraries(MJGenerator
 	${Boost_PROGRAM_OPTIONS_LIBRARY}
 	${GMP_LIBRARIES}
