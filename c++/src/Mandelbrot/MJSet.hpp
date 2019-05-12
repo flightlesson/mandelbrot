@@ -7,6 +7,10 @@
 #include "ViewPort.hpp"
 
 namespace Mandelbrot {
+
+    /**
+     * Describe a view into the set.
+     */
     class MJSet {
     public:
         MJSet(const ViewPort&,double,int);
