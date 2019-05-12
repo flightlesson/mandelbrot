@@ -1,7 +1,7 @@
 # This file works under both GNU Make and BSD Make:
 
 BUILD_ARTIFACTS=build-artifacts
-CMAKE=cmake
+CMAKE?=`which cmake3 2>/dev/null || echo cmake`
 INSTALL_ARTIFACTS=install-artifacts
 
 # All build artifacts will be created under the $(BUILD_ARTIFACTS) directory.
