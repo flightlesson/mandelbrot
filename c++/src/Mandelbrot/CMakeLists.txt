@@ -10,16 +10,16 @@ find_package(Boost 1.40 COMPONENTS
 
 find_package(GMP)
 
-include_directories( ${Boost_INCLUDE_DIR} ${GMP_INCLUDE_DIR} ../CTPL-master)
+include_directories( ${Boost_INCLUDE_DIR} ${GMP_INCLUDE_DIR} ../CTPL-master )
 
 add_executable(MJGenerator
 	closenessToSet.c closenessToSet.h
-	HpComplex.cpp   HpComplex.hpp
+	HpComplex.cpp     HpComplex.hpp
 	HpDouble.cpp      HpDouble.hpp
-	MJGenerator.cpp   MjGenerator.hpp
- 	MJSet.cpp	     MjSet.hpp
-	Point.cpp              Point.hpp
-	ViewPort.cpp         ViewPort.hpp
+	MJGenerator.cpp   MJGenerator.hpp
+ 	MJSet.cpp	  MJSet.hpp
+	Point.cpp         Point.hpp
+	ViewPort.cpp      ViewPort.hpp
 	)
 target_link_libraries(MJGenerator
 	${Boost_PROGRAM_OPTIONS_LIBRARY}
