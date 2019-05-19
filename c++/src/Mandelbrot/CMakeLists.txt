@@ -1,6 +1,8 @@
 project(Mandelbrot)
 cmake_minimum_required(VERSION 3.13)
 
+set(CMAKE_CXX_STANDARD 11)
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 find_package(Boost 1.40 COMPONENTS
