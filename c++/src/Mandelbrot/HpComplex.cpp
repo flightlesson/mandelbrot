@@ -12,5 +12,5 @@ Mandelbrot::HpDouble Mandelbrot::HpComplex::getImag() const {
 }
 
 std::ostream& operator<<(std::ostream& strm, const Mandelbrot::HpComplex& obj) {
-  return strm << obj.getReal() << "," << obj.gitImag();
+  return strm << obj.getReal() << "," << obj.getImag();
 }
