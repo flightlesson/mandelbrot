@@ -15,7 +15,7 @@ find_package(GMP)
 include_directories( ${Boost_INCLUDE_DIR} ${GMP_INCLUDE_DIR} ../CTPL-master )
 
 add_executable(MJGenerator
-	closenessToSet.c closenessToSet.h
+	closenessToSet.c  closenessToSet.h
 	HpComplex.cpp     HpComplex.hpp
 	HpDouble.cpp      HpDouble.hpp
 	MJGenerator.cpp   MJGenerator.hpp
@@ -32,7 +32,7 @@ add_subdirectory("unit-tests")
 
 enable_testing()
 add_test(NAME testClosenessToSet COMMAND unit-tests/testClosenessToSet)
-add_test(NAME testHpDouble          COMMAND unit-tests/testHpDouble)
+add_test(NAME testHpDouble       COMMAND unit-tests/testHpDouble)
 
 
 
