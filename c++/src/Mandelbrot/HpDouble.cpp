@@ -41,6 +41,10 @@ void Mandelbrot::HpDouble::getMpf(mpf_t returned) const {
   mpf_set(returned,mpf);
 }
 
+bool Mandelbrot::HpDouble::isNegative() const {
+  return mpf_sgn(mpf) < 0;
+}
+
 std::ostream& operator<<(std::ostream& strm, const Mandelbrot::HpDouble& obj) {
   mpf_t returned;
   obj.getMpf(returned);

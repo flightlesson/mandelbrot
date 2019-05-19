@@ -15,6 +15,7 @@ namespace Mandelbrot {
         std::string getString() const;
         char *gets(char *buf, int bufsiz) const;
         void getMpf(mpf_t returned) const;
+        bool isNegative() const;
     private:
         std::string s;
         mpf_t mpf;
